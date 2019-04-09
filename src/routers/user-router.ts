@@ -17,7 +17,7 @@ export const userRouter = express.Router();
  */
 userRouter.get('', [
   authMiddleware(users),
-  roleCheck("administrator"),
+  roleCheck("finance-manager"),
   (req, res) => {
     console.log('Retreiving All Users');
     res.json(users);
@@ -27,14 +27,18 @@ userRouter.get('', [
  * find user by id
  * endpoint: /users/:id
  */
-userRouter.get('/:id', (req, res) => {
+userRouter.get('/:id', 
+  authMiddleware(users),
+  roleCheck("finance-manager", 'allow'),
+  (req, res) => {
   const id: number = +req.params.id;
   console.log(`retreiving user with id: ${id}`);
   const user = users.find(u => u.userId === id);
   if (user) {
     res.json(user);
   } else {
-    res.sendStatus(404);
+    res.status(404);
+    res.send(`User with ID number: ${id}`)
   }
 })
 

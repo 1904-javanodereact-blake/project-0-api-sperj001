@@ -2,7 +2,7 @@ import { User } from "./model/user";
 import { role } from "./model/role";
 
 export let roles: role[] = [
-  new role(1, 'administrator'),
+  new role(1, 'finance-manager'),
   new role(2, 'associate'),
   new role(3, "guest"),
 ];

@@ -22,7 +22,8 @@ export function authMiddleware (users: User[]) {
       req.session.loggedIn = true;
       next();
     } else {
-      res.sendStatus(400);
+      res.status(400);
+      res.send('Invalid Credentials');
     }
   }
 } 

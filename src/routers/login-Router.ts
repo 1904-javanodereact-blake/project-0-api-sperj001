@@ -8,6 +8,6 @@ loginRouter.post("",[
     authMiddleware(users), 
     (req, res) => {
         res.json(req.session.user);
-        console.log(`${req.session.user} has been logged-in successfully.`)
+        console.log(`${req.session.user.username} has been logged-in successfully.`)
     }])
 
