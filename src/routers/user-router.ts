@@ -1,5 +1,5 @@
 import express from 'express';
-import { users, roles } from '../state';
+import { users} from '../state';
 import { User } from '../model/user';
 import { authMiddleware } from '../middleware/auth.middleware';
 
@@ -15,7 +15,7 @@ export const userRouter = express.Router();
  * endpoint: /users
  */
 userRouter.get('', [
-  //authMiddleware(roles),
+  authMiddleware(users),
   (req, res) => {
     console.log('retreiving all users')
     res.json(users);

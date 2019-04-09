@@ -7,5 +7,5 @@ export const loginRouter = express.Router();
 loginRouter.post("",[
     authMiddleware(users), 
     (req, res) => {
-        res.send("Logged")
+        res.json(req.session.user);
     }])
