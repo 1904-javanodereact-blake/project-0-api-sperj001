@@ -2,6 +2,7 @@ import express from 'express';
 import { users} from '../state';
 import { User } from '../model/user';
 import { authMiddleware } from '../middleware/auth.middleware';
+import { roleCheck } from '../middleware/roleCheckmiddleware';
 
 /**
  * User router will handle all requests starting with
@@ -16,8 +17,9 @@ export const userRouter = express.Router();
  */
 userRouter.get('', [
   authMiddleware(users),
+  roleCheck("administrator"),
   (req, res) => {
-    console.log('retreiving all users')
+    console.log('Retreiving All Users');
     res.json(users);
   }])
 

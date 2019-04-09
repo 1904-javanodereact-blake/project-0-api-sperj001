@@ -5,9 +5,9 @@ export function authMiddleware (users: User[]) {
     let isAuthorized = false;
     if(!req.session.loggedIn){
       const { username, password } = req.body
+      console.log(`Attempting To Log In User With Username: ${username} Password: ${password}`)
       for(let i = 0; i < users.length; i++)
       {
-        console.log(`Checked Username: ${username} Checked Stored: ${users[i].username} Checked Password: ${password} Checked Stored: ${users[i].password}`)
         if(users[i].username === username && users[i].password === password){
           isAuthorized = true;
           req.session.user = users[i];
