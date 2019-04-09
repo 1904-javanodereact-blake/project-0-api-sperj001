@@ -1,6 +1,5 @@
 import express from 'express';
 import { users} from '../state';
-import { User } from '../model/user';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { roleCheck } from '../middleware/roleCheckmiddleware';
 
@@ -42,7 +41,7 @@ userRouter.get('/:id',
   }
 })
 
-
+/*
 userRouter.post('', (req, res) => {
   console.log(`creating user`, req.body);
   const user: User = req.body;
@@ -51,12 +50,14 @@ userRouter.post('', (req, res) => {
   res.status(201);
   res.send(user);
 })
-
-userRouter.patch('', (req, res) => {
+*/
+userRouter.patch('', 
+  authMiddleware(users),
+  roleCheck("admin"),  
+  (req, res) => {
   const { body } = req; // destructuring
-  console.log(`updating user`, body);
+  console.log(`Updating User's Info`);
   const user = users.find((u) => {
-    // console.log(`u = `, u);
     return u.userId === body.userId
   });
   if (!user) {
@@ -68,20 +69,6 @@ userRouter.patch('', (req, res) => {
       }
     }
     res.json(user);
-  }
-
-})
-
-
-userRouter.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find(u => u.username === username && u.password === password);
-
-  if (user) {
-    // attach the user data to the session object
-    req.session.user = user;
-    res.end();
-  } else {
-    res.sendStatus(401);
-  }
+    console.log(`Update Complete`);
+  } 
 })

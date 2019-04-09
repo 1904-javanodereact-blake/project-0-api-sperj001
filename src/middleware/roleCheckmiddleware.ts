@@ -2,11 +2,15 @@ import { users } from "../state";
 
 export function roleCheck(requiredRole:string, optionalRole = 'block'){
     return (req, res, next) => {
-        console.log(`Checking Authorization of ${req.session.user.role.role} against ${requiredRole}`);
-        if(optionalRole != 'block'){
-            console.log(`Also Checking Authorization Of Second Optional Allowed User With ID${optionalRole}`)
-        }
-    if(req.session.user.role.role == requiredRole){
+    console.log(`Checking Authorization of ${req.session.user.role.role} against ${requiredRole}`);
+    if(optionalRole != 'block'){
+        console.log(`Also Checking Authorization Of Second Optional Allowed User With ID${optionalRole}`)
+    }
+    if(requiredRole == "employee" && (req.session.user.role.role == "admin" || req.session.user.role.role == "finance-manager")){
+        console.log('User Authorized');
+        next();
+    }
+    if(req.session.user.role.role == requiredRole || req.session.user.role.role == "admin"){
         console.log('User Authorized');
         next();
       }
