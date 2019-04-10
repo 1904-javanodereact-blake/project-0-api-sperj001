@@ -22,26 +22,20 @@ reimbursementRouter.post('',
 })
 /*
 reimbursementRouter.get('',
-    authMiddleware(users),
-    roleCheck("employee"),
+//    authMiddleware(users),
+//    roleCheck("employee"),
     (req, res) => {
         console.log(`Getting All Reimbursements`);
         res.send(reinbursements);
 })
 */
 reimbursementRouter.get('/status/:statusId', 
-  authMiddleware(users),
-  roleCheck("finance-manager", 'allow'),
+  //authMiddleware(users),
+  //roleCheck("finance-manager", 'allow'),
   (req, res) => {
   const id: number = +req.params.statusId;
   console.log(`Retreiving Reinbursement With Status ID: ${id}`);
-  let rebuse = [...reinbursements];
-  for(let i = 0; i < reinbursements.length; i++){
-    console.log(reinbursements[i].status.statusId);
-    if(id != reinbursements[i].status.statusId){
-      rebuse.splice(i, 1);
-    }
-  }
+  let rebuse = reinbursements.filter(ele => ele.status.statusId == id);
   for(let p = 0; p< rebuse.length; p++){
       for(let x = 0; x < rebuse.length-1; x++){
           if(rebuse[x].dateSubmitted > rebuse[x+1].dateSubmitted){
@@ -55,7 +49,53 @@ reimbursementRouter.get('/status/:statusId',
     res.json(rebuse);
   } else {
     res.status(404);
-    res.send(`Reinbursement with ID number: ${id} does not exist`)
+    res.send(`Reinbursement with Status ID number: ${id} does not exist`)
   }
+})
+//still need to add the functionality but have added the start for the url
+reimbursementRouter.get('/author/userID/:userId', 
+  authMiddleware(users),
+  roleCheck("finance-manager", 'allow'),
+  (req, res) => {
+  const id: number = +req.params.userId;
+  console.log(`Retreiving Reinbursement For User ID: ${id}`);
+  let rebuse = reinbursements.filter(ele => ele.author == id);
+  for(let p = 0; p< rebuse.length; p++){
+      for(let x = 0; x < rebuse.length-1; x++){
+          if(rebuse[x].dateSubmitted > rebuse[x+1].dateSubmitted){
+              let t = rebuse[x+1];
+              rebuse[x+1] = rebuse[x];
+              rebuse[x] = t;
+          }
+      }
+  }
+  if (rebuse) {
+    res.json(rebuse);
+  } else {
+    res.status(404);
+    res.send(`Reimbursement with User ID number: ${id} does not exist`)
+  }
+})
+
+reimbursementRouter.patch('', 
+  //authMiddleware(users),
+  //roleCheck('finance-manager'), 
+  (req, res) => {
+    const { body } = req; // destructuring
+    console.log(`Updating Reimbursements's Info`);
+    const selectre = reinbursements.find((ele) => {
+      return ele.reimbursementId === body.reimbursementId;
+    });
+    if (!selectre) {
+      res.sendStatus(404);
+    } else {
+      for (let field in selectre) {
+        if (body[field] !== undefined) {
+          selectre[field] = body[field];
+        }
+      }
+      res.json(selectre);
+      console.log(`Update Complete`);
+    } 
 })
   
