@@ -20,7 +20,7 @@ reimbursementRouter.post('',
         res.send(reburse);
         console.log(`Pending Reimbursement Added`);
 })
-
+/*
 reimbursementRouter.get('',
     authMiddleware(users),
     roleCheck("employee"),
@@ -28,14 +28,29 @@ reimbursementRouter.get('',
         console.log(`Getting All Reimbursements`);
         res.send(reinbursements);
 })
-
+*/
 reimbursementRouter.get('/status/:statusId', 
   authMiddleware(users),
   roleCheck("finance-manager", 'allow'),
   (req, res) => {
   const id: number = +req.params.statusId;
-  console.log(`Retreiving Reinbursement With ID: ${id}`);
-  const rebuse = reinbursements.find(u => u.reimbursementId === id);
+  console.log(`Retreiving Reinbursement With Status ID: ${id}`);
+  let rebuse = [...reinbursements];
+  for(let i = 0; i < reinbursements.length; i++){
+    console.log(reinbursements[i].status.statusId);
+    if(id != reinbursements[i].status.statusId){
+      rebuse.splice(i, 1);
+    }
+  }
+  for(let p = 0; p< rebuse.length; p++){
+      for(let x = 0; x < rebuse.length-1; x++){
+          if(rebuse[x].dateSubmitted > rebuse[x+1].dateSubmitted){
+              let t = rebuse[x+1];
+              rebuse[x+1] = rebuse[x];
+              rebuse[x] = t;
+          }
+      }
+  }
   if (rebuse) {
     res.json(rebuse);
   } else {
@@ -43,3 +58,4 @@ reimbursementRouter.get('/status/:statusId',
     res.send(`Reinbursement with ID number: ${id} does not exist`)
   }
 })
+  

@@ -24,3 +24,5 @@ app.use('/login', loginRouter);
 app.use(`/reimbursements`, reimbursementRouter);
 //start up application
 app.listen(8080);
+
+console.log("ERS System Active")

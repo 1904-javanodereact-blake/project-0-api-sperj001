@@ -18,7 +18,7 @@ export let users: User[] = [
 
 let RS: ReimbursementStatus[] = [
   new ReimbursementStatus(0, "Pending"),
-  new ReimbursementStatus(1, "Approved"),
+  new ReimbursementStatus(0, "Approved"),
   new ReimbursementStatus(2, "Denied")
 ]
 
@@ -28,7 +28,7 @@ let RT: ReimbursementType[] = [
   new ReimbursementType(2, "Other")
 ]
 export let reinbursements: Reimbursement[] = [
-  new Reimbursement(1, 1, 100, 12/11/1997, 4/9/2017, 'Travel Expendature', 1, RS[2], RT[0]),
-  new Reimbursement(2, 2, 200, 12/11/1998, 4/9/2018, 'Lawsuit filed', 1, RS[1], RT[1]),
-  new Reimbursement(3, 3, 300, 12/11/1999, null, "Pay me, I'm bored", 1, RS[0], RT[2]),
+  new Reimbursement(1, 1, 100, new Date('2012.08.10').getTime() / 1000, 4/9/2017, 'Travel Expendature', 1, RS[0], RT[0]),
+  new Reimbursement(2, 2, 200, new Date('2012.07.10').getTime() / 1000, new Date('2013.08.10').getTime() / 1000, 'Lawsuit filed', 1, RS[1], RT[1]),
+  new Reimbursement(3, 3, 300, new Date('2018.08.10').getTime() / 1000, null, "Pay me, I'm bored", 1, RS[2], RT[2]),
 ]

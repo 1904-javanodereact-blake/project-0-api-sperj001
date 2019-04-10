@@ -1,0 +1,20 @@
+{
+	"reimbursementId": 4,
+	"author": 3,
+	"amount": 5000, 
+	"dateSubmitted": 04092019, 
+	"description": "dont ask me ",
+	"status":{
+		"statusId": 4,
+    	"status": "Pending"	
+	},
+	"type":{
+		"typeId": 4,
+    	"type": "Other"
+	}
+}
+
+{
+"username": "User3",
+	"password": "password"
+}
