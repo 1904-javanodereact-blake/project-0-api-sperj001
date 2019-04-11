@@ -11,18 +11,18 @@ export let roles: role[] = [
 ];
 
 export let users: User[] = [
-  new User(roles[0].roleId, "User1", "Allow1Man2Access", "Joseph", "Sperduto", "josephsperduto@gmail.com", roles[0]),
-  new User(roles[1].roleId, "User2", "OpenSesame", "Lauren", "Smith", "ididntask@gmail.com", roles[1]),
-  new User(roles[2].roleId, "User3", "password", "Guest", "Guest", "default@default.com", roles[2])
+  new User(1, "User1", "Allow1Man2Access", "Joseph", "Sperduto", "josephsperduto@gmail.com", roles[0]),
+  new User(2, "User2", "OpenSesame", "Lauren", "Smith", "ididntask@gmail.com", roles[1]),
+  new User(3, "User3", "password", "Guest", "Guest", "default@default.com", roles[2])
 ];
 
-let RS: ReimbursementStatus[] = [
+export let RS: ReimbursementStatus[] = [
   new ReimbursementStatus(0, "Pending"),
-  new ReimbursementStatus(0, "Approved"),
+  new ReimbursementStatus(1, "Approved"),
   new ReimbursementStatus(2, "Denied")
 ]
 
-let RT: ReimbursementType[] = [
+export let RT: ReimbursementType[] = [
   new ReimbursementType(0, "Travel"),
   new ReimbursementType(1, "Meeting"),
   new ReimbursementType(2, "Other")
