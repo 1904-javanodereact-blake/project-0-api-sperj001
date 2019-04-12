@@ -13,7 +13,7 @@ export async function UpdateServerBasis(){
   UpdateRoles();
   UpdateReimbursementTypes();
   UpdateReimbursementStatus();
-
+  UpdateReimbursements();
   console.log("All Arrays Have Been Updated Based Upon Database Values");
 }
 
@@ -36,6 +36,7 @@ export async function UpdateUser(){
   }
   catch{
     console.log(myclient)
+    myclient.end();
   }
 }
 
@@ -76,7 +77,7 @@ export async function UpdateReimbursementTypes(){
 export async function UpdateReimbursementStatus(){
   //populate the Reimbursement Status Array
   const myclient = establishDBconnection();
-  console.log(ReimbursementStatus); //see old roles array
+  //console.log(ReimbursementStatus); //see old roles array
   RS.splice(0, RS.length);
   const result = await myclient.query({
     rowMode: `array`,
@@ -86,13 +87,13 @@ export async function UpdateReimbursementStatus(){
   holdRS.forEach(element => {
     RS.push(new ReimbursementStatus(element[0], element[1]));
   });
-  console.log(RS); //see new roles array
+  //console.log(RS); //see new roles array
   myclient.end();
 }
 export async function UpdateReimbursements(){
   //populate the Reimbursement Status Array
   const myclient = establishDBconnection();
-  console.log(ReimbursementStatus); //see old roles array
+  //console.log(ReimbursementStatus); //see old roles array
   reinbursements.splice(0, RS.length);
   const result = await myclient.query({
     rowMode: `array`,
@@ -102,6 +103,6 @@ export async function UpdateReimbursements(){
   holdR.forEach(element => {
     reinbursements.push(new Reimbursement(element[0], element[1], element[2], element[3], element[4], element[5], element[6], element[7], element[8]));
   });
-  console.log(reinbursements); //see new roles array
+  //console.log(reinbursements); //see new roles array
   myclient.end();
 }

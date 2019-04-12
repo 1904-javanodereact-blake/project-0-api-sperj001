@@ -2,6 +2,7 @@ import express from 'express';
 import { users} from '../state';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { roleCheck } from '../middleware/roleCheckmiddleware';
+import { UploadUserUpdate } from '../DAOs/uploader';
 
 /**
  * User router will handle all requests starting with
@@ -58,17 +59,18 @@ userRouter.patch('',
   const { body } = req; // destructuring
   console.log(`Updating User's Info`);
   const user = users.find((u) => {
-    return u.userId === body.userId
+    return u.userId === body.userId;
   });
   if (!user) {
-    res.sendStatus(404);
-  } else {
+    res.status(404);
+    res.send('User ID Not Found');
+  } 
+  else {
     for (let field in user) {
       if (body[field] !== undefined) {
         user[field] = body[field];
       }
     }
-    res.json(user);
-    console.log(`Update Complete`);
+    UploadUserUpdate(body.userID, user, res);
   } 
 })
