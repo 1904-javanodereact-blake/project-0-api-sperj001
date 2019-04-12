@@ -3,6 +3,7 @@ import { users} from '../state';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { roleCheck } from '../middleware/roleCheckmiddleware';
 import { UploadUserUpdate } from '../DAOs/uploader';
+import { UpdateUser } from '../DAOs/updaters';
 
 /**
  * User router will handle all requests starting with
@@ -56,6 +57,7 @@ userRouter.patch('',
   authMiddleware(users),
   roleCheck("admin"),  
   (req, res) => {
+  UpdateUser(); 
   const { body } = req; // destructuring
   console.log(`Updating User's Info`);
   const user = users.find((u) => {
