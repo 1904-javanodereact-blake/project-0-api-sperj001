@@ -4,6 +4,8 @@ import { users} from '../state';
 import { roleCheck } from '../middleware/roleCheckmiddleware';
 import { Reimbursement } from '../model/reimbursement';
 import { reinbursements } from '../state';
+import { UpdateServerBasis } from '../DAOs/updaters';
+import { UploadNewReimbursement } from '../DAOs/uploader';
 
 export const reimbursementRouter = express.Router();
 
@@ -11,14 +13,13 @@ reimbursementRouter.post('',
     authMiddleware(users),
     roleCheck("employee"),
     (req, res) => {
+        UpdateServerBasis();
         console.log(`Creating New Reimbursement`);
         console.log(req.body);
         const reburse:Reimbursement = req.body.entry;
         reburse.reimbursementId = reinbursements.length +1;
         reinbursements.push(reburse);
-        res.status(201);
-        res.send(reburse);
-        console.log(`Pending Reimbursement Added`);
+        UploadNewReimbursement(reburse, res);
 })
 /*
 reimbursementRouter.get('',

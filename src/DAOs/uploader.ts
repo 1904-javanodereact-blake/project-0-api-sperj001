@@ -1,5 +1,6 @@
 import { User } from "../model/user";
 import { establishDBconnection } from "../middleware/DAOmiddleware";
+import { Reimbursement } from "../model/reimbursement";
 
 export async function UploadUserUpdate(userID, user:User, res:any){
     //Update the database entry for the user at the specified ID with the new given user's data
@@ -30,4 +31,24 @@ export async function UploadUserUpdate(userID, user:User, res:any){
         console.log(`Update Failure`);
         myclient.end();
     }
+}
+
+export async function UploadNewReimbursement(reburse:Reimbursement, res:any){
+    //Update the database table to include a new reimbursement
+    const myclient = establishDBconnection();
+        try{
+            await myclient.query(`SET SCHEMA 'ERS';
+                INSERT INTO reimbursements
+                VALUES (${reburse.reimbursementId}, ${reburse.author}, ${reburse.amount}, ${reburse.amount}, ${reburse.dateResolved}, '${reburse.description}', ${reburse.resolver}, ${reburse.status.statusId}, ${reburse.type.typeId});`
+            );
+            res.status(201);
+            res.send(reburse);
+            console.log(`Pending Reimbursement Added`);
+            myclient.end();
+        }catch{
+            res.status(504);
+            res.send('V1 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
+            console.log(`Update Failure V1`);
+            myclient.end();
+        }
 }
