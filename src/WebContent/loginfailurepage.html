@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+<head>
+        <style type = "text/css">
+            body {
+                background-color: grey;
+            }
+           </style>
+</head>
+<body>
+    <audio controls autoplay hidden>
+        <source src="/resources/the_office_theme_song.mp3">
+    </audio>
+    <head> 
+        <nav class="w3-bar w3-black">
+            <img class="w3-bar-item" src="/resources/revature_logo.png" alt ="Revature Logo" width="148px" height="60px"/>
+        </nav>
+    </head>
+    <body background="grey">
+        <center>
+            <form id="logform" action="http://localhost:8080/login" method="POST">
+                <div class="imgcontainer">
+                        <img src="/resources/login_no.gif" alt="Avatar" class="avatar" width="25%" height="25%">
+                </div>
+                
+                <div class="container">
+                    <b>Unrecognized Username/Password Combination</b>
+                    <br>
+                    <input type="button" onclick="location.href='/homepage.html';" value="Return To Login" />
+                </div>
+            </form>
+        </center>
+    </body>
+</body>
+</html>

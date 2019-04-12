@@ -9,7 +9,7 @@ import { Reimbursement } from "../model/reimbursement";
 //need to add server function to get most recents from the database
 export async function UpdateServerBasis(){
   //populate the user array at start
-  UpdateUser();
+  UpdateUsers();
   UpdateRoles();
   UpdateReimbursementTypes();
   UpdateReimbursementStatus();
@@ -102,6 +102,23 @@ export async function UpdateReimbursements(){
   let holdR = result[1].rows;
   holdR.forEach(element => {
     reinbursements.push(new Reimbursement(element[0], element[1], element[2], element[3], element[4], element[5], element[6], element[7], element[8]));
+  });
+  //console.log(reinbursements); //see new roles array
+  myclient.end();
+}
+
+export async function UpdateUsers(){
+  //populate the users array
+  const myclient = establishDBconnection();
+  //console.log(ReimbursementStatus); //see old roles array
+  users.splice(0, RS.length);
+  const result = await myclient.query({
+    rowMode: `array`,
+    text: `SET SCHEMA 'ERS'; SELECT * FROM users`
+  });
+  let holdR = result[1].rows;
+  holdR.forEach(element => {
+    users.push(new User(element[0], element[1], element[2], element[3], element[4], element[5], element[6]));
   });
   //console.log(reinbursements); //see new roles array
   myclient.end();
