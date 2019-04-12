@@ -73,6 +73,6 @@ userRouter.patch('',
         user[field] = body[field];
       }
     }
-    UploadUserUpdate(body.userID, user, res);
+    UploadUserUpdate(user, res);
   } 
 })

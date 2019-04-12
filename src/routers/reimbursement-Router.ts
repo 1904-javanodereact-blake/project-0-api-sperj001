@@ -5,7 +5,7 @@ import { roleCheck } from '../middleware/roleCheckmiddleware';
 import { Reimbursement } from '../model/reimbursement';
 import { reinbursements } from '../state';
 import { UpdateServerBasis } from '../DAOs/updaters';
-import { UploadNewReimbursement } from '../DAOs/uploader';
+import { UploadNewReimbursement, UploadReimbursementUpdate } from '../DAOs/uploader';
 
 export const reimbursementRouter = express.Router();
 
@@ -95,7 +95,7 @@ reimbursementRouter.patch('',
           selectre[field] = body[field];
         }
       }
-      res.json(selectre);
+      UploadReimbursementUpdate(selectre, res);
       console.log(`Update Complete`);
     } 
 })
