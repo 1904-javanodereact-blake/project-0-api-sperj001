@@ -6,20 +6,23 @@
 <head>
         <style type = "text/css">
             body {
-                background-color: grey;
+                background-color: #808080;
             }
            </style>
 </head>
 <body>
-    <audio controls autoplay hidden>
-        <source src="../resources/the_office_theme_song.mp3">
-    </audio>
+    <audio src="/resources/the_office_theme_song.wav" id="backmusic" loop="loop" autoplay="true"></audio>
+    <script>
+        window.onload = function(){
+            document.getElementById('backmusic').play();
+        }
+    </script>
     <head> 
         <nav class="w3-bar w3-black">
             <img class="w3-bar-item" src="../resources/revature_logo.png" alt ="Revature Logo" width="148px" height="60px"/>
         </nav>
     </head>
-    <body background="grey">
+    <body background-color= #808080>
         <center>
             <form id="logform" action="http://localhost:8080/login" method="POST">
                 <div class="imgcontainer">
@@ -38,5 +41,6 @@
             </form>
         </center>
     </body>
+    
 </body>
 </html>

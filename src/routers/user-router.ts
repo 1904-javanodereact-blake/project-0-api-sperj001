@@ -16,6 +16,13 @@ export const userRouter = express.Router();
  * find all users
  * endpoint: /users
  */
+userRouter.get('/home', [
+  authMiddleware(users),
+  (req, res) => {
+    console.log(`Redirecting User To User Homepage`);
+    res.redirect(`/usersmainpage.html`);
+  }])
+
 userRouter.get('', [
   authMiddleware(users),
   roleCheck("finance-manager"),

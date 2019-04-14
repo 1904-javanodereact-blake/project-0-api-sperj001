@@ -9,6 +9,13 @@ import { UploadNewReimbursement, UploadReimbursementUpdate } from '../DAOs/uploa
 
 export const reimbursementRouter = express.Router();
 
+reimbursementRouter.get('/home', [
+  authMiddleware(users),
+  (req, res) => {
+    console.log(`Redirecting User To User Homepage`);
+    res.redirect(`/reimbursementsmainpage.html`);
+  }])
+
 reimbursementRouter.post('',
     authMiddleware(users),
     roleCheck("employee"),
