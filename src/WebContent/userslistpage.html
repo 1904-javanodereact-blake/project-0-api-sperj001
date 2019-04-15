@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+<head>
+        <style type = "text/css">
+            body {
+                background-color: 	#808080;
+            }
+           </style>
+</head>
+<body>
+    <audio src="/resources/the_office_theme_song.wav" id="backmusic" loop="loop" autoplay="true"></audio>
+    <script>
+        window.onload = function(){
+            document.getElementById('backmusic').play();
+        }
+    </script>
+    <head> 
+        <nav class="w3-bar w3-black">
+            <img class="w3-bar-item" src="/resources/revature_logo.png" alt ="Revature Logo" width="148px" height="60px"/>
+            <a><form action="http://localhost:8080/login/home" method="get"><button class="w3-button w3-bar-item" id="homebtn" type="submit">Home</button></form></a>
+            <a><form action="http://localhost:8080/users/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Users</button></form></a>
+            <a><form action="http://localhost:8080/reimbursements/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Reimbursements</button></form></a> 
+        </nav>
+    </head>
+    <body background-color= #808080>
+        <center>
+            <div class="imgcontainer">
+                <img src="/resources/list_users.jpeg" alt="Avatar" class="avatar" width="50%" height="50%">
+            </div>
+            
+            <div class="container">
+                <b>List Of Users</b>
+                <br>
+                <nav>
+                    <script>
+                            function cryptROT13(str){
+                                var input     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                                var output    = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
+                                var index     = x => input.indexOf(x);
+                                var translate = x => index(x) > -1 ? output[index(x)] : x;
+                                return str.split('').map(translate).join('');
+                            }
+                            let urlString = (window.location.href);
+                            let queryParts = urlString.split('?:');
+                            let beforeQueryString = queryParts[1];
+                            let afterQueryString = cryptROT13(beforeQueryString);
+                            let beforeSplitString = afterQueryString.split('*');
+/* Used to if more users*/  let moreAbility = beforeSplitString[1].split('&');
+                            let usersHold = beforeSplitString[0].split(`+`);
+                            let findUsers = new Array();
+                            for(let i = 0; i <usersHold.length; i++){
+                                findUsers.push(usersHold[i].split("&"));
+                            }
+                            let tableItterations = usersHold.length;
+                            let writePosition = 0; 
+                            let div = document.getElementsByTagName("div");
+                            let body = document.getElementsByTagName("body")[0];
+                            let tbl = document.createElement('table');
+                            let tblBody = document.createElement("tbody");
+                            let trow = document.createElement('tr');
+                            for(let i = 0; i<tableItterations; i++){
+                                let row = document.createElement("tr");
+                                for(let j = 0; j < 3; j++){
+                                    let cell = document.createElement("td");
+                                        let cellText = document.createTextNode(findUsers[i][j]);
+                                    writePosition++;
+                                    cell.appendChild(cellText);
+                                    row.appendChild(cell);
+                                }
+                                tblBody.appendChild(row);
+                            }
+                            tbl.appendChild(tblBody);
+                            body.appendChild(tbl);
+                            tbl.setAttribute("border", 2); 
+                            tbl.setAttribute("align", "center");                             
+                        </script>
+                        
+                </nav>
+            </div>
+        </center>
+    </body>
+</body>
+<body>
+    <br>
+    <center>                        
+        <form id="logform" action="http://localhost:8080/users/update" method="POST">
+            <div class="container">
+                <label for="searchid"><b>Edit User With ID:</b></label>
+                <input type="text" name="searchUser" size="5pxl" required>
+                <button type="submit">Get User</button>
+            </div>
+        </form>
+    </center>
+</body>
+</html>

@@ -28,12 +28,40 @@
     <body background-color= #808080>
         <center>
                 <div class="imgcontainer">
-                    <img src="/resources/login_yes.jpg" alt="Avatar" class="avatar">
+                    <img src="/resources/update_user.png" alt="Avatar" class="avatar">
                 </div>
                 
                 <div class="container">
-                    <b>Home Page</b>
+                    <b>Update User</b>
                     <br>
+                    <form id="userupdateform" action="http://localhost:8080/users/update/complete" method="POST">
+                        <div class="container">
+                            <br>
+                            <label for="uid"><b>User ID = </b></label>
+                            <a id="IuserId"></a>
+                            <br>
+                            <br>
+                            <label for="uusername"><b>Username</b></label>
+                            <input type="text" id="Iusername" name="username" required>
+                            <br>
+                            <label for="upsw"><b>Password</b></label>
+                            <input type="text" id="Ipassword" name="password" required>
+                            <br>
+                            <label for="ufn"><b>First Name</b></label>
+                            <input type="text" id="Ifirstname" name="firstname" required>
+                            <br>
+                            <label for="uln"><b>Last Name</b></label>
+                            <input type="text" id="Ilastname" name="lastname" required>
+                            <br>
+                            <label for="uemail"><b>Email</b></label>
+                            <input type="text" id="Iemail" name="email" required>
+                            <br>
+                            <label for="urole"><b>Role</b></label>
+                            <input type="text" id="Irole" name="role" required>
+                            <br>
+                            <button type="submit">Update</button>
+                        </div>
+                    </form>
                     <script>
                         function cryptROT13(str){
                             var input     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -63,14 +91,17 @@
                         let lastname = lastnameA[1];
                         let email = emailA[1];
                         let role = roleA[1];
+                        console.log(role, roleA[1], queryString[6], afterQueryString);
                         //send these variables outside the script
-                        document.write(`User ID: ${userid}<br>`);
-                        document.write(`Username: ${username}<br>`);
-                        document.write(`Password: ${password}<br>`);
-                        document.write(`First Name: ${firstname}<br>`);
-                        document.write(`Last Name: ${lastname}<br>`);
-                        document.write(`Email: ${email}<br>`);
-                        document.write(`Role: ${role}<br>`);
+                        window.onload = function(){
+                            document.getElementById("IuserId").innerHTML = userid;
+                            document.getElementById("Iusername").value = username;
+                            document.getElementById("Ipassword").value = password;
+                            document.getElementById("Ifirstname").value = firstname;
+                            document.getElementById("Ilastname").value = lastname;
+                            document.getElementById("Iemail").value = email;
+                            document.getElementById("Irole").value = role;
+                        }
                     </script>
                 </div>
         </center>

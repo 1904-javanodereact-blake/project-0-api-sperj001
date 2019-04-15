@@ -18,7 +18,7 @@ reimbursementRouter.get('/home', [
 
 reimbursementRouter.post('',
     authMiddleware(users),
-    roleCheck("employee"),
+    roleCheck("employee", 'block', 'reim post'),
     (req, res) => {
         UpdateServerBasis();
         console.log(`Creating New Reimbursement`);
@@ -63,7 +63,7 @@ reimbursementRouter.get('/status/:statusId',
 //still need to add the functionality but have added the start for the url
 reimbursementRouter.get('/author/userID/:userId', 
   authMiddleware(users),
-  roleCheck("finance-manager", 'allow'),
+  roleCheck("finance-manager", 'block', 'reim get user by id'),
   (req, res) => {
   const id: number = +req.params.userId;
   console.log(`Retreiving Reinbursement For User ID: ${id}`);

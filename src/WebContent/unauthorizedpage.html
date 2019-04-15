@@ -27,24 +27,20 @@
     </head>
     <body background-color= #808080>
         <center>
-            <div class="imgcontainer">
-                <img src="/resources/users_options.jpeg" alt="Avatar" class="avatar">
-            </div>
             
-            <div class="container">
-                <b>User Main Page</b>
-                <br>
-                <nav>
-                    <form action="http://localhost:8080/users/list/0" method="get"><button class="w3-button w3-bar-item" id="usersretrievebtn" type="submit">Get All Users (Manager)</button></form>
-                    <form id="logform" action="http://localhost:8080/users/getuser" method="POST">
-                        <div class="container">
-                            <label for="searchid"><b>View User With ID:</b></label>
-                            <input type="text" name="searchUser" size="5pxl" required>
-                            <button type="submit">Get User</button>
-                        </div>
-                    </form>
-                </nav>
-            </div>
+            <form id="logform" action="http://localhost:8080/login" method="POST">
+                <div class="imgcontainer">
+                    <img src="/resources/unauthorized_user.jpg" alt="Avatar" class="avatar">
+                </div>
+                
+                <div class="container">
+                    <b>Unathorized User</b>
+                    <br>
+                    <p>You Are Not Authorized To Access This Functionality/Area. Please Contact Your Local Administrator</p>
+                    <br>
+
+                </div>
+            </form>
         </center>
     </body>
 </body>

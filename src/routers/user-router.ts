@@ -1,9 +1,11 @@
 import express from 'express';
-import { users} from '../state';
+import { users, roles} from '../state';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { roleCheck } from '../middleware/roleCheckmiddleware';
 import { UploadUserUpdate } from '../DAOs/uploader';
-import { UpdateUser } from '../DAOs/updaters';
+import { UpdateUsers } from '../DAOs/updaters';
+import { cryptROT13 } from '../middleware/ROT13';
+import { User } from '../model/user';
 
 /**
  * User router will handle all requests starting with
@@ -25,28 +27,63 @@ userRouter.get('/home', [
 
 userRouter.get('', [
   authMiddleware(users),
-  roleCheck("finance-manager"),
+  roleCheck("finance-manager", 'block', 'user update call'),
   (req, res) => {
     console.log('Retreiving All Users');
     res.json(users);
   }])
 
+  userRouter.get('/list/:startlocation', [
+    authMiddleware(users),
+    roleCheck("finance-manager", 'block', 'user list'),
+    async (req, res) => {
+      await UpdateUsers();
+      const index: number = +req.params.startlocation;
+      let queryString = "";
+      let aIndex = index + 5;
+      let maxIndex = users.length-1;
+      let more = true;
+      if(maxIndex <= aIndex){
+        more = false;
+        aIndex = maxIndex;
+      }
+      for(let i = index; i<=aIndex; i++){
+        queryString += `userID=${users[i].userId}&username=${users[i].username}&role=${users[i].role.role}`
+        if(i!=aIndex){
+          queryString += '+';
+        }
+      }
+      queryString += `*more&${more}`;
+      res.redirect(`http://localhost:8080/userslistpage.html?:${cryptROT13(queryString)}`);
+      console.log(`Sending To Get Users List Page Index ${index} through ${aIndex}`);
+    }])
 /**
  * find user by id
  * endpoint: /users/:id
  */
-userRouter.get('/:id', 
+userRouter.post('/getuser', 
   authMiddleware(users),
-  roleCheck("finance-manager", 'allow'),
-  (req, res) => {
-  const id: number = +req.params.id;
-  console.log(`retreiving user with id: ${id}`);
-  const user = users.find(u => u.userId === id);
+  roleCheck("finance-manager", 'allow', 'user id'),
+  async (req, res) => {
+  await UpdateUsers();
+  console.log(req.body);
+  const id: number = req.body.searchUser;
+  console.log(`Retreiving user with id: ${id}`);
+  let user:User;
+  users.forEach(ele => {
+    if(id == ele.userId){
+      user = ele;
+      return;  
+    }
+  })
   if (user) {
-    res.json(user);
+    let {userId, username, password, firstname, lastname, email, role} = user;
+    let queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
+    console.log("Sending User To Specified User Page");
+    res.redirect(`/specificuserpage.html?:${cryptROT13(queryString)}`);
   } else {
     res.status(404);
-    res.send(`User with ID number: ${id}`)
+    res.redirect("http://localhost:8080/usererrorpage.html")
   }
 })
 
@@ -60,26 +97,77 @@ userRouter.post('', (req, res) => {
   res.send(user);
 })
 */
-userRouter.patch('', 
+userRouter.post('/update', 
   authMiddleware(users),
-  roleCheck("admin"),  
-  (req, res) => {
-  UpdateUser(); 
-  const { body } = req; // destructuring
-  console.log(`Updating User's Info`);
-  const user = users.find((u) => {
-    return u.userId === body.userId;
-  });
+  roleCheck("admin", 'block', 'user update entry'),  
+  async (req, res) => {
+  await UpdateUsers(); 
+  console.log(req.body);
+  const id: number = req.body.searchUser;
+  console.log(`Retreiving user with id: ${id}`);
+  let user:User;
+  users.forEach(ele => {
+    if(id == ele.userId){
+      user = ele;
+      return;  
+    }
+  })
+  console.log(user);
   if (!user) {
     res.status(404);
-    res.send('User ID Not Found');
+    res.redirect("http://localhost:8080/usererrorpage.html");
   } 
   else {
-    for (let field in user) {
-      if (body[field] !== undefined) {
-        user[field] = body[field];
-      }
-    }
-    UploadUserUpdate(user, res);
+    let {userId, username, password, firstname, lastname, email, role} = user;
+    let queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
+    res.redirect(`/updateuserpage.html?:${cryptROT13(queryString)}`); 
   } 
 })
+
+userRouter.post(`/update/complete`,
+  authMiddleware(users),
+  roleCheck("admin", 'block', 'user update'),
+  async(req, res) => {
+    await UpdateUsers(); 
+    console.log(req.body);
+    const id: number = req.body.userId;
+    console.log(`Retreiving user with id: ${id}`);
+    let user:User;
+    users.forEach(ele => {
+      if(id == ele.userId){
+        user = ele;
+        return;  
+      }
+    })
+    console.log("Before change: " + user);
+    if (!user) {
+      res.status(404);
+      res.redirect("http://localhost:8080/usererrorpage.html")
+    } 
+    else {
+      user.username = req.body.username;
+      user.firstname = req.body.firstname;
+      user.lastname = req.body.lastname;
+      user.password = req.body.password;
+      let rolePass = false;
+      user.role.role = req.body.role;
+      for(let i = 0; i < roles.length; i++){
+        if(roles[i].role == user.role.role){
+          user.role.roleId = roles[i].roleId;
+          rolePass = true;
+        }
+      }
+      if(rolePass == true){
+        console.log("After change: "+ user);
+        req.session.user = user;
+        await UploadUserUpdate(user, res);
+        let {userId, username, password, firstname, lastname, email, role} = user;
+        let queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
+        res.redirect(`/updateuserpage.html?:${cryptROT13(queryString)}`); 
+      }
+      else{
+        res.status(404);
+        res.redirect("http://localhost:8080/usererrorpage.html");
+      }
+    } 
+  })

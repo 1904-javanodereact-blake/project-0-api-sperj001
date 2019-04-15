@@ -11,25 +11,23 @@ export async function UploadUserUpdate(user:User, res:any){
                 rowMode: `array`,
                 text: `SET SCHEMA 'ERS';
                 UPDATE users 
-                SET userid = ${user.userId}, username = ${user.username}, passkey = ${user.password}, firstname = ${user.firstname}, lastname = ${user.lastname}, email = ${user.email}, ${user.role.roleId}
+                SET userid = ${user.userId}, username = '${user.username}', passkey = '${user.password}', firstname = '${user.firstname}', lastname = '${user.lastname}', email = '${user.email}', givenrole = ${user.role.roleId}
                 WHERE userid = ${user.userId};`
             });
             console.log(`Result returned: ${result.rows}`);
-            res.json(user);
             console.log(`Update Complete`);
-            myclient.end();
+           
         }catch{
             res.status(504);
             res.send('V1 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
             console.log(`Update Failure`);
-            myclient.end();
         }
     }
     catch{
         res.status(504);
         res.send('V2 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
         console.log(`Update Failure`);
-        myclient.end();
+        
     }
 }
 
@@ -43,21 +41,20 @@ export async function UploadNewReimbursement(reburse:Reimbursement, res:any){
                 VALUES (${reburse.reimbursementId}, ${reburse.author}, ${reburse.amount}, ${reburse.amount}, ${reburse.dateResolved}, '${reburse.description}', ${reburse.resolver}, ${reburse.status.statusId}, ${reburse.type.typeId});`
             );
             res.status(201);
-            res.send(reburse);
             console.log(`Pending Reimbursement Added`);
-            myclient.end();
+            
         }catch{
             res.status(504);
             res.send('V1 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
             console.log(`Update Failure V1`);
-            myclient.end();
+            
         }
     }
     catch{
         res.status(504);
         res.send('V2 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
         console.log(`Update Failure`);
-        myclient.end();
+        
     }
 }
 
@@ -74,20 +71,19 @@ export async function UploadReimbursementUpdate(reburse:Reimbursement, res:any){
                 WHERE userid = ${reburse.reimbursementId};`
             });
             console.log(`Result returned: ${result.rows}`);
-            res.json(reburse);
             console.log(`Update Complete`);
-            myclient.end();
+            
         }catch{
             res.status(504);
             res.send('V1 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
             console.log(`Update Failure`);
-            myclient.end();
+            
         }
     }
     catch{
         res.status(504);
         res.send('V2 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
         console.log(`Update Failure`);
-        myclient.end();
+        
     }
 }

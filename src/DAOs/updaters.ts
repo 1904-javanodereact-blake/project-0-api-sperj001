@@ -9,11 +9,11 @@ import { Reimbursement } from "../model/reimbursement";
 //need to add server function to get most recents from the database
 export async function UpdateServerBasis(){
   //populate the user array at start
-  UpdateUsers();
-  UpdateRoles();
-  UpdateReimbursementTypes();
-  UpdateReimbursementStatus();
-  UpdateReimbursements();
+  await UpdateRoles();
+  await UpdateUsers();
+  await UpdateReimbursementTypes();
+  await UpdateReimbursementStatus();
+  await UpdateReimbursements();
   console.log("All Arrays Have Been Updated Based Upon Database Values");
 }
 
@@ -108,6 +108,7 @@ export async function UpdateReimbursements(){
 }
 
 export async function UpdateUsers(){
+  await UpdateRoles();
   //populate the users array
   const myclient = establishDBconnection();
   //console.log(ReimbursementStatus); //see old roles array
@@ -117,9 +118,18 @@ export async function UpdateUsers(){
     text: `SET SCHEMA 'ERS'; SELECT * FROM users`
   });
   let holdR = result[1].rows;
-  holdR.forEach(element => {
-    users.push(new User(element[0], element[1], element[2], element[3], element[4], element[5], element[6]));
-  });
-  //console.log(reinbursements); //see new roles array
+  let userRoles:any[] = new Array();
+  for(let i = 0; i<holdR.length; i++){
+    for(let x = 0; x<roles.length; x++){
+      if(holdR[i][6] == roles[x].roleId){
+        userRoles.push(new role(roles[x].roleId, roles[x].role));
+        
+      }
+    }
+  }
+  //console.log(userRoles[0].roleId);
+  for(let i = 0; i<holdR.length; i++){
+    users.push(new User(holdR[i][0], holdR[i][1], holdR[i][2], holdR[i][3], holdR[i][4], holdR[i][5], userRoles[i]));
+  }
   myclient.end();
 }
