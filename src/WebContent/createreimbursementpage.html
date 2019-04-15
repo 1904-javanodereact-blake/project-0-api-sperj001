@@ -27,31 +27,37 @@
     </head>
     <body background-color= #808080>
         <center>
+            <form id="logform" action="http://localhost:8080/reimbursements" method="POST">
                 <div class="imgcontainer">
-                    <img src="/resources/reimbursements_page.jpg" alt="Avatar" class="avatar">
+                    <img src="../resources/reimbursement_creation.png" alt="Avatar" class="avatar" width="50%" height="50%">
                 </div>
                 
                 <div class="container">
-                    <b>Reimbursements Page</b>
+                    <label for="uamount"><b>Amount Requested</b></label>
+                    <input type="text" placeholder="Enter Amount" name="amount" required>
                     <br>
-                    <form action="http://localhost:8080/reimbursements/create" method="get"><button id="reimbursecreatsendbtn" type="submit">Request A Reimbursement</button></form>
-                    <form id="logform" action="http://localhost:8080/users/getuser" method="POST">
-                        <div class="container">
-                            <label for="searchid"><b>View Reimbsements By Author ID. (Manager or Self Query)</b></label>
-                            <input type="text" name="searchUser" size="5pxl" required>
-                            <button type="submit">Get Reimbursements</button>
-                        </div>
-                    </form>
-                    <form id="logform" action="http://localhost:8080/users/getuser" method="POST">
-                        <div class="container">
-                            <label for="searchid"><b>View Reimbsements By Status ID (Manager)</b></label>
-                            <input type="text" name="searchUser" size="5pxl" required>
-                            <button type="submit">Get Reimbursements</button>
-                        </div>
-                    </form>
-                    <form action="http://localhost:8080/users/list/0" method="get"><button class="w3-button w3-bar-item" id="usersretrievebtn" type="submit">View All Reimbursement(Manager)</button></form>
+                    <label for="udesc"><b>Description</b></label>
+                    <input type="text" placeholder="Enter Description" name="description" required>
+                    <br>
+                    <label for="utype"><b>Type</b></label>
+                    <input type="text" placeholder="Enter Type" name="type" required>
+                    <br>
+                    <input type="hidden" id="timevalue" value="mytime" name="dateSubmitted">
+                    <button type="submit">Send Request</button>
+                    <p>Date/Time: <span id="datetime"></span></p>
+
+                    <script>
+                    var dt = new Date();
+                    document.getElementById("datetime").innerHTML = dt.toLocaleString();
+                    document.getElementById("timevalue").value = dt.getTime();
+                    </script>
                 </div>
+            </form>
         </center>
     </body>
 </body>
 </html>
+
+
+
+

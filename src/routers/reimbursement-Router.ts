@@ -1,11 +1,14 @@
 import express from 'express'; 
 import { authMiddleware } from '../middleware/auth.middleware';
-import { users} from '../state';
+import { users, RT, RS} from '../state';
 import { roleCheck } from '../middleware/roleCheckmiddleware';
 import { Reimbursement } from '../model/reimbursement';
 import { reinbursements } from '../state';
 import { UpdateServerBasis } from '../DAOs/updaters';
 import { UploadNewReimbursement, UploadReimbursementUpdate } from '../DAOs/uploader';
+import { ReimbursementStatus } from '../model/ReimbursementStatus';
+import { ReimbursementType } from '../model/ReimbursementType';
+
 
 export const reimbursementRouter = express.Router();
 
@@ -16,17 +19,47 @@ reimbursementRouter.get('/home', [
     res.redirect(`/reimbursementsmainpage.html`);
   }])
 
+reimbursementRouter.get('', [
+  authMiddleware(users),
+  (req, res) => {
+    console.log('hello');
+
+  }])
+reimbursementRouter.get('/create',
+  authMiddleware(users),
+  roleCheck("employee", 'block', 'reim create send'),
+  (req, res) => {
+    res.redirect("http://localhost:8080/createreimbursementpage.html");
+    console.log('Sending User To Create Reimbursement Page');
+})
+
 reimbursementRouter.post('',
     authMiddleware(users),
-    roleCheck("employee", 'block', 'reim post'),
+    roleCheck("employee", 'block', 'reim create do'),
     (req, res) => {
         UpdateServerBasis();
         console.log(`Creating New Reimbursement`);
         console.log(req.body);
-        const reburse:Reimbursement = req.body.entry;
-        reburse.reimbursementId = reinbursements.length +1;
+        for(let i = 0; i < RT.length; i++){
+          if(req.body.type ==RT[i].type){
+            var newType = new ReimbursementType(RT[i].typeId, RT[i].type);
+          }
+        }
+        for(let i = 0; i < RS.length; i++){
+          if(0 == RS[i].statusId){
+            var newStatus = new ReimbursementStatus(RS[i].statusId, RS[i].status);
+          }
+        }
+        
+        if(!ReimbursementType){
+          res.status(404);
+          res.redirect("http://localhost:8080/usererrorpage.html")
+        }
+        else{
+        let reburse = new Reimbursement((reinbursements.length +1), req.session.user.userId, parseFloat(req.body.amount), parseFloat(req.body.dateSubmitted), null, req.body.description, null, newStatus, newType);
         reinbursements.push(reburse);
         UploadNewReimbursement(reburse, res);
+        }
 })
 /*
 reimbursementRouter.get('',
@@ -86,8 +119,8 @@ reimbursementRouter.get('/author/userID/:userId',
 })
 
 reimbursementRouter.patch('', 
-  //authMiddleware(users),
-  //roleCheck('finance-manager'), 
+  authMiddleware(users),
+  roleCheck('finance-manager', 'block', 'reimbursement update'), 
   (req, res) => {
     const { body } = req; // destructuring
     console.log(`Updating Reimbursements's Info`);

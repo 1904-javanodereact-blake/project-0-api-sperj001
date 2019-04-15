@@ -131,7 +131,7 @@ userRouter.post(`/update/complete`,
     await UpdateUsers(); 
     console.log(req.body);
     const id: number = req.body.userId;
-    console.log(`Retreiving user with id: ${id}`);
+    console.log(`Retreiving Updated User With ID: ${id}`);
     let user:User;
     users.forEach(ele => {
       if(id == ele.userId){
@@ -139,7 +139,6 @@ userRouter.post(`/update/complete`,
         return;  
       }
     })
-    console.log("Before change: " + user);
     if (!user) {
       res.status(404);
       res.redirect("http://localhost:8080/usererrorpage.html")
@@ -158,7 +157,6 @@ userRouter.post(`/update/complete`,
         }
       }
       if(rolePass == true){
-        console.log("After change: "+ user);
         req.session.user = user;
         await UploadUserUpdate(user, res);
         let {userId, username, password, firstname, lastname, email, role} = user;
