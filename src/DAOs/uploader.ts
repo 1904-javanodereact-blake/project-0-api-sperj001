@@ -18,16 +18,11 @@ export async function UploadUserUpdate(user:User, res:any){
             console.log(`Update Complete`);
            
         }catch{
-            res.status(504);
-            res.send('V1 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
-            console.log(`Update Failure`);
+            sendServerError(res);
         }
     }
     catch{
-        res.status(504);
-        res.send('V2 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
-        console.log(`Update Failure`);
-        
+        sendServerError(res);
     }
 }
 
@@ -38,23 +33,17 @@ export async function UploadNewReimbursement(reburse:Reimbursement, res:any){
         try{
             await myclient.query(`SET SCHEMA 'ERS';
                 INSERT INTO reimbursements
-                VALUES (${reburse.reimbursementId}, ${reburse.author}, ${reburse.amount}, ${reburse.amount}, ${reburse.dateResolved}, '${reburse.description}', ${reburse.resolver}, ${reburse.status.statusId}, ${reburse.type.typeId});`
+                VALUES (${reburse.reimbursementId}, ${reburse.author}, ${reburse.amount}, ${reburse.dateSubmitted}, ${reburse.dateResolved}, '${reburse.description}', ${reburse.resolver}, ${reburse.status.statusId}, ${reburse.type.typeId});`
             );
             res.status(201);
             console.log(`Pending Reimbursement Added`);
             
         }catch{
-            res.status(504);
-            res.send('V1 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
-            console.log(`Update Failure V1`);
-            
+            sendServerError(res);
         }
     }
     catch{
-        res.status(504);
-        res.send('V2 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
-        console.log(`Update Failure`);
-        
+        sendServerError(res);
     }
 }
 
@@ -74,16 +63,15 @@ export async function UploadReimbursementUpdate(reburse:Reimbursement, res:any){
             console.log(`Update Complete`);
             
         }catch{
-            res.status(504);
-            res.send('V1 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
-            console.log(`Update Failure`);
-            
+            sendServerError(res);
         }
     }
     catch{
-        res.status(504);
-        res.send('V2 Identifier: Service Unaviable At This Time, Please Contact Your System Admin');
-        console.log(`Update Failure`);
-        
+        sendServerError(res);
     }
+}
+function sendServerError(res){
+    res.status(504);
+    res.redirect("http://localhost:8080/servererrorpage.html");
+    console.log(`Update Failure`);
 }

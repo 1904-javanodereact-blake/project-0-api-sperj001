@@ -81,7 +81,7 @@ export async function UpdateReimbursementStatus(){
   RS.splice(0, RS.length);
   const result = await myclient.query({
     rowMode: `array`,
-    text: `SET SCHEMA 'ERS'; SELECT * FROM reimbursementtype`
+    text: `SET SCHEMA 'ERS'; SELECT * FROM reimbursementstatus`
   });
   let holdRS = result[1].rows;
   holdRS.forEach(element => {

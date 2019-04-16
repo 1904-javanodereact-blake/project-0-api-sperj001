@@ -8,6 +8,7 @@ import { UpdateServerBasis } from '../DAOs/updaters';
 import { UploadNewReimbursement, UploadReimbursementUpdate } from '../DAOs/uploader';
 import { ReimbursementStatus } from '../model/ReimbursementStatus';
 import { ReimbursementType } from '../model/ReimbursementType';
+import { cryptROT13 } from '../middleware/ROT13';
 
 
 export const reimbursementRouter = express.Router();
@@ -43,11 +44,14 @@ reimbursementRouter.post('',
         for(let i = 0; i < RT.length; i++){
           if(req.body.type ==RT[i].type){
             var newType = new ReimbursementType(RT[i].typeId, RT[i].type);
+            console.log(newType);
           }
         }
         for(let i = 0; i < RS.length; i++){
           if(0 == RS[i].statusId){
             var newStatus = new ReimbursementStatus(RS[i].statusId, RS[i].status);
+            console.log(newStatus);
+            
           }
         }
         
@@ -56,9 +60,15 @@ reimbursementRouter.post('',
           res.redirect("http://localhost:8080/usererrorpage.html")
         }
         else{
+          console.log(req.body.dateSubmitted);
         let reburse = new Reimbursement((reinbursements.length +1), req.session.user.userId, parseFloat(req.body.amount), parseFloat(req.body.dateSubmitted), null, req.body.description, null, newStatus, newType);
         reinbursements.push(reburse);
         UploadNewReimbursement(reburse, res);
+        let {reimbursementId, author, dateSubmitted, dateResolved, resolver, status, type} = reburse;
+        console.log(reburse);
+        let queryString = `reimbursementId=${reimbursementId}&author=${author}&dateSubmitted=${dateSubmitted}&dateResolved=${dateResolved}&resolver=${resolver}&status=${status.status}&type=${type.type}`;
+        console.log("Sending User To Specified Reimbursement Page");
+        res.redirect(`/specificreimbursement.html?:${cryptROT13(queryString)}`);
         }
 })
 /*

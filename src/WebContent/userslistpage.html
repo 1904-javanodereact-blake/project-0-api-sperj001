@@ -55,7 +55,6 @@
                                 findUsers.push(usersHold[i].split("&"));
                             }
                             let tableItterations = usersHold.length;
-                            let writePosition = 0; 
                             let div = document.getElementsByTagName("div");
                             let body = document.getElementsByTagName("body")[0];
                             let tbl = document.createElement('table');
@@ -66,7 +65,6 @@
                                 for(let j = 0; j < 3; j++){
                                     let cell = document.createElement("td");
                                         let cellText = document.createTextNode(findUsers[i][j]);
-                                    writePosition++;
                                     cell.appendChild(cellText);
                                     row.appendChild(cell);
                                 }

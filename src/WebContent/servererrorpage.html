@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+<head>
+        <style type = "text/css">
+            body {
+                background-color: 	#808080;
+            }
+           </style>
+</head>
+<body>
+    <audio src="/resources/the_office_theme_song.wav" id="backmusic" loop="loop" autoplay="true"></audio>
+    <script>
+        window.onload = function(){
+            document.getElementById('backmusic').play();
+        }
+    </script>
+    <head> 
+        <nav class="w3-bar w3-black">
+            <img class="w3-bar-item" src="/resources/revature_logo.png" alt ="Revature Logo"/>
+            <a><form action="http://localhost:8080/login/home" method="get"><button class="w3-button w3-bar-item" id="homebtn" type="submit">Home</button></form></a>
+            <a><form action="http://localhost:8080/users/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Users</button></form></a>
+            <a><form action="http://localhost:8080/reimbursements/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Reimbursements</button></form></a> 
+        </nav>
+    </head>
+    <body background-color= #808080>
+        <center>
+            <div class="imgcontainer">
+                <img src="/resources/server_error.jpg" alt="Avatar" class="avatar" width="40%" height="40%">
+            </div>
+            
+            <div class="container">
+                <b>Server Error</b>
+                <br>
+                <p>Server Side Error, Please Try Again</p>
+                <br>
+
+            </div>
+        </center>
+    </body>
+</body>
+</html>

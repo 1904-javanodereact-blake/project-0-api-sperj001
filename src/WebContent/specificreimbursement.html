@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+<head>
+        <style type = "text/css">
+            body {
+                background-color: 	#808080;
+            }
+           </style>
+</head>
+<body>
+    <audio src="/resources/the_office_theme_song.wav" id="backmusic" loop="loop" autoplay="true"></audio>
+    <script>
+        window.onload = function(){
+            document.getElementById('backmusic').play();
+        }
+    </script>
+    <head> 
+        <nav class="w3-bar w3-black">
+            <img class="w3-bar-item" src="/resources/revature_logo.png" alt ="Revature Logo" width="148px" height="60px"/>
+            <a><form action="http://localhost:8080/login/home" method="get"><button class="w3-button w3-bar-item" id="homebtn" type="submit">Home</button></form></a>
+            <a><form action="http://localhost:8080/users/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Users</button></form></a>
+            <a><form action="http://localhost:8080/reimbursements/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Reimbursements</button></form></a>
+        </nav>
+    </head>
+    <body background-color= #808080>
+        <center>
+                <div class="imgcontainer">
+                    <img src="/resources/specific_reimbursement.jpg" alt="Avatar" class="avatar">
+                </div>
+                
+                <div class="container">
+                    <b>User Information</b>
+                    <br>
+                    <script>
+                        function cryptROT13(str){
+                            var input     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+                            var output    = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
+                            var index     = x => input.indexOf(x);
+                            var translate = x => index(x) > -1 ? output[index(x)] : x;
+                            return str.split('').map(translate).join('');
+                        }
+                        urlString = (window.location.href);
+                        queryParts = urlString.split('?:');
+                        beforeQueryString = queryParts[1];
+                        afterQueryString = cryptROT13(beforeQueryString);
+                        queryString = afterQueryString.split('&');
+                        let reimbursementidA = queryString[0].split("=");
+                        let authorA = queryString[1].split("=");
+                        let datesubmittedA = queryString[2].split("=");
+                        let dateresolvedA = queryString[3].split("=");
+                        let resolverA = queryString[4].split("=");
+                        let statusA = queryString[5].split("=");
+                        let typeA = queryString[6].split('=');
+                        //values to be read later
+                        let reimbursementid = reimbursementidA[1];
+                        let author = authorA[1];
+                        let datesubmitted = datesubmittedA[1];
+                        let dateresolved = dateresolvedA[1];
+                        let resolver = resolverA[1];
+                        let status = statusA[1];
+                        let type = typeA[1];
+                        //conver dates
+                        let subdate = new Date(datesubmitted*1);
+                        let resdate = new Date(dateresolved*1);
+                        //send these variables outside the script
+                        document.write(`Reimbursement ID: ${reimbursementid}<br>`);
+                        document.write(`Author ID: ${author}<br>`);
+                        document.write(`Date Submitted: ${subdate}<br>`);
+                        document.write(`Date Resolved: ${resdate}<br>`);
+                        document.write(`Resolver ID: ${resolver}<br>`);
+                        document.write(`Status: ${status}<br>`);
+                        document.write(`Type: ${type}<br>`);
+                    </script>
+                </div>
+        </center>
+    </body>
+</body>
+</html>
