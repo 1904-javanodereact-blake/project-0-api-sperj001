@@ -1,4 +1,4 @@
-export function cryptROT13(str){
+export function crypt(str){
     var input     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     var output    = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
     var index     = x => input.indexOf(x);

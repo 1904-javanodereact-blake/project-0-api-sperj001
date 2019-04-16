@@ -32,10 +32,10 @@
             </div>
             
             <div class="container">
-                <b>List Of Users</b>
+                <b>List Of Reimbursements By Status</b>
                 <br>
                 <nav>
-                    <script id="sciptstuff">
+                    <script id="scriptstuff">
                             function cryptROT13(str){
                                 var input     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
                                 var output    = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
@@ -46,15 +46,16 @@
                             let urlString = (window.location.href);
                             let queryParts = urlString.split('?:');
                             let beforeQueryString = queryParts[1];
+                            
                             let afterQueryString = cryptROT13(beforeQueryString);
                             let beforeSplitString = afterQueryString.split('*');
 /* Used to if more users*/  let moreAbility = beforeSplitString[1].split('&');
-                            let usersHold = beforeSplitString[0].split(`+`);
-                            let findUsers = new Array();
-                            for(let i = 0; i <usersHold.length; i++){
-                                findUsers.push(usersHold[i].split("&"));
+                            let usersReimbursements = beforeSplitString[0].split(`+`);
+                            let findreimbursements = new Array();
+                            for(let i = 0; i <usersReimbursements.length-1; i++){
+                                findreimbursements.push(usersReimbursements[i].split("&"));
                             }
-                            let tableItterations = usersHold.length-1;
+                            let tableItterations = findreimbursements.length;
                             let div = document.getElementsByTagName("div");
                             let body = document.getElementsByTagName("body")[0];
                             let tbl = document.createElement('table');
@@ -64,7 +65,7 @@
                                 let row = document.createElement("tr");
                                 for(let j = 0; j < 3; j++){
                                     let cell = document.createElement("td");
-                                        let cellText = document.createTextNode(findUsers[i][j]);
+                                        let cellText = document.createTextNode(findreimbursements[i][j]);
                                     cell.appendChild(cellText);
                                     row.appendChild(cell);
                                 }
@@ -89,11 +90,11 @@
 <body>
     <br>
     <center>                        
-        <form id="logform" action="http://localhost:8080/users/update" method="POST">
+        <form id="logform" action="http://localhost:8080/reimbursements/specificreimbursement" method="POST">
             <div class="container">
-                <label for="searchid"><b>Edit User With ID:</b></label>
-                <input type="text" name="searchUser" size="5pxl" required>
-                <button type="submit">Get User</button>
+                <label for="searchReimbursement"><b>Veiw Reimbursement With Reimbursement ID:</b></label>
+                <input type="text" name="searchReimbursement" size="5pxl" required>
+                <button type="submit">Get Reimbursement</button>
             </div>
         </form>
     </center>

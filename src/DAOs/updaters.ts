@@ -94,16 +94,29 @@ export async function UpdateReimbursements(){
   //populate the Reimbursement Status Array
   const myclient = establishDBconnection();
   //console.log(ReimbursementStatus); //see old roles array
-  reinbursements.splice(0, RS.length);
+  reinbursements.splice(0, reinbursements.length);
   const result = await myclient.query({
     rowMode: `array`,
-    text: `SET SCHEMA 'ERS'; SELECT * FROM reimbursementtype`
+    text: `SET SCHEMA 'ERS'; SELECT * FROM reimbursements`
   });
   let holdR = result[1].rows;
+  for(let i = 0; i<holdR.length; i++){
+    for(let x = 0; x<RS.length; x++){
+      if(holdR[i][7] == RS[x].statusId){
+        holdR[i][7] = RS[x];
+      }
+    }
+    for(let x = 0; x<RT.length; x++){
+      if(holdR[i][8] == RT[x].typeId){
+        holdR[i][8] = RT[x];
+      }
+    }
+  }
   holdR.forEach(element => {
     reinbursements.push(new Reimbursement(element[0], element[1], element[2], element[3], element[4], element[5], element[6], element[7], element[8]));
   });
   //console.log(reinbursements); //see new roles array
+  //console.log("updated reimbursements");
   myclient.end();
 }
 
@@ -123,11 +136,11 @@ export async function UpdateUsers(){
     for(let x = 0; x<roles.length; x++){
       if(holdR[i][6] == roles[x].roleId){
         userRoles.push(new role(roles[x].roleId, roles[x].role));
-        
       }
     }
   }
-  //console.log(userRoles[0].roleId);
+  //console.log(userRoles);
+  //console.log("Updated user roles");
   for(let i = 0; i<holdR.length; i++){
     users.push(new User(holdR[i][0], holdR[i][1], holdR[i][2], holdR[i][3], holdR[i][4], holdR[i][5], userRoles[i]));
   }

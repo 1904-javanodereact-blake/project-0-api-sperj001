@@ -72,6 +72,12 @@
                         document.write(`Email: ${email}<br>`);
                         document.write(`Role: ${role}<br>`);
                     </script>
+                    <script>
+                            var node = document.getElementById("scriptstuff");
+                            if (node.parentNode) {
+                            node.parentNode.removeChild(node);
+                            }
+                        </script>
                 </div>
         </center>
     </body>

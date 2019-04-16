@@ -8,7 +8,13 @@ export function roleCheck(requiredRole:string, optionalRole = 'block', sender){
     //console.log(`Checking Authorization of ${req.session.user.role.role} against ${requiredRole}`);
     if(optionalRole != 'block'){
         console.log(`Also Checking Authorization Of Second Optional Allowed User With Setting ${optionalRole}`)
-        const id: number = +req.body.searchUser;
+        let id:number;
+        if(req.body.searchUser){
+            id= + req.body.searchUser;
+        }
+        else if(req.body.author){
+            id= + req.body.author;
+        }
         console.log(id + " is the set id");
         console.log(`Testing If User ID Matches Requested ID`);
         if(id < users.length){

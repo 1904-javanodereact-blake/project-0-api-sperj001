@@ -28,14 +28,48 @@
     <body background-color= #808080>
         <center>
                 <div class="imgcontainer">
-                    <img src="/resources/specific_user.png" alt="Avatar" class="avatar">
+                    <img src="/resources/update_user.png" alt="Avatar" class="avatar">
                 </div>
                 
                 <div class="container">
-                    <b>User Information</b>
+                    <b>Update User</b>
                     <br>
-                    <script>
-                        function cryptROT13(str){
+                    <form id="userupdateform" action="http://localhost:8080/users/update/complete" method="POST">
+                        <div class="container">
+                            <br>
+                            <label for="uid"><b>Reimbursement ID = </b></label><a id="IuserId"></a>
+                            <br>
+                            <br>
+                            <label for="uusername"><b>Author</b></label>
+                            <input type="text" id="Iusername" name="username" required>
+                            <br>
+                            <label for="upsw"><b>Amount</b></label>
+                            <input type="text" id="Ipassword" name="password" required>
+                            <br>
+                            <label for="ufn"><b>Date Submitted</b></label>
+                            <input type="text" id="Ifirstname" name="firstname" required>
+                            <br>
+                            <label for="uln"><b>Date Resolved</b></label>
+                            <input type="text" id="Ilastname" name="lastname" required>
+                            <br>
+                            <label for="uemail"><b>Resolver</b></label>
+                            <input type="text" id="Iemail" name="email" required>
+                            <br>
+                            <label for="urole"><b>Description</b></label>
+                            <input type="text" id="Irole" name="role" required>
+                            <br>
+                            <label for="urole"><b>Type</b></label>
+                            <input type="text" id="Irole" name="role" required>
+                            <br>
+                            <label for="urole"><b>Status</b></label>
+                            <input type="text" id="Irole" name="role" required>
+                            <br>
+                            <input type="hidden" id="2userId" name="userId" required>
+                            <button type="submit">Update</button>
+                        </div>
+                    </form>
+                    <script id="scriptstuff">
+                        function crypt(str){
                             var input     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
                             var output    = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
                             var index     = x => input.indexOf(x);
@@ -45,8 +79,10 @@
                         urlString = (window.location.href);
                         queryParts = urlString.split('?:');
                         beforeQueryString = queryParts[1];
-                        afterQueryString = cryptROT13(beforeQueryString);
+                        afterQueryString = crypt(beforeQueryString);
                         queryString = afterQueryString.split('&');
+                        //remove crypt from DOM
+                        
                         
                         let useridA = queryString[0].split("=");
                         let usernameA = queryString[1].split("=");
@@ -63,17 +99,21 @@
                         let lastname = lastnameA[1];
                         let email = emailA[1];
                         let role = roleA[1];
+                        console.log(role, roleA[1], queryString[6], afterQueryString);
                         //send these variables outside the script
-                        document.write(`User ID: ${userid}<br>`);
-                        document.write(`Username: ${username}<br>`);
-                        document.write(`Password: ${password}<br>`);
-                        document.write(`First Name: ${firstname}<br>`);
-                        document.write(`Last Name: ${lastname}<br>`);
-                        document.write(`Email: ${email}<br>`);
-                        document.write(`Role: ${role}<br>`);
+                        window.onload = function(){
+                            document.getElementById("IuserId").innerHTML = userid;
+                            document.getElementById("2userId").value = userid;
+                            document.getElementById("Iusername").value = username;
+                            document.getElementById("Ipassword").value = password;
+                            document.getElementById("Ifirstname").value = firstname;
+                            document.getElementById("Ilastname").value = lastname;
+                            document.getElementById("Iemail").value = email;
+                            document.getElementById("Irole").value = role;
+                        }
                     </script>
                     <script>
-                        var node = document.getElementById("scriptstuff");
+                         var node = document.getElementById("scriptstuff");
                         if (node.parentNode) {
                         node.parentNode.removeChild(node);
                         }

@@ -4,11 +4,11 @@ import { users, RT, RS} from '../state';
 import { roleCheck } from '../middleware/roleCheckmiddleware';
 import { Reimbursement } from '../model/reimbursement';
 import { reinbursements } from '../state';
-import { UpdateServerBasis } from '../DAOs/updaters';
+import { UpdateServerBasis, UpdateReimbursements } from '../DAOs/updaters';
 import { UploadNewReimbursement, UploadReimbursementUpdate } from '../DAOs/uploader';
 import { ReimbursementStatus } from '../model/ReimbursementStatus';
 import { ReimbursementType } from '../model/ReimbursementType';
-import { cryptROT13 } from '../middleware/ROT13';
+import { crypt } from '../middleware/ecrypt';
 
 
 export const reimbursementRouter = express.Router();
@@ -22,8 +22,28 @@ reimbursementRouter.get('/home', [
 
 reimbursementRouter.get('', [
   authMiddleware(users),
-  (req, res) => {
-    console.log('hello');
+  async(req, res) => {
+    await UpdateServerBasis();
+    const index: number = +req.params.startlocation;
+    let queryString = "";
+    let aIndex = index + 5;
+    //let maxIndex = reinbursements.length-1;
+    let more = true;
+    /*if(maxIndex <= aIndex){
+      more = false;
+      aIndex = maxIndex;
+    }*/
+    console.log(reinbursements);
+    for(let i = 0; i<reinbursements.length; i++){
+        queryString += `ReimbursementID=${reinbursements[i].reimbursementId}&Author=${reinbursements[i].author}&Status=${reinbursements[i].status.status}`
+        if(i!=aIndex){
+          queryString += '+';
+      }
+    }
+    queryString += `*more&${more}`;
+    console.log(queryString);
+    res.redirect(`http://localhost:8080/reimbursementsalllistpage.html?:${crypt(queryString)}`);
+    console.log(`Sending To Reimbursement All List`);
 
   }])
 reimbursementRouter.get('/create',
@@ -68,9 +88,28 @@ reimbursementRouter.post('',
         console.log(reburse);
         let queryString = `reimbursementId=${reimbursementId}&author=${author}&dateSubmitted=${dateSubmitted}&dateResolved=${dateResolved}&resolver=${resolver}&status=${status.status}&type=${type.type}`;
         console.log("Sending User To Specified Reimbursement Page");
-        res.redirect(`/specificreimbursement.html?:${cryptROT13(queryString)}`);
+        res.redirect(`/specificreimbursement.html?:${crypt(queryString)}`);
         }
 })
+reimbursementRouter.post("/specificreimbursement", [
+authMiddleware(users),
+    roleCheck("employee", 'block', 'reim create do'),
+    async (req, res) => {
+        await UpdateReimbursements();
+        let id = req.body.searchReimbursement;
+        let locator = 0;
+        for(let i = 0; i<reinbursements.length; i++){
+          if(id == reinbursements[i].reimbursementId){
+            locator = i;
+          }
+        }
+        let reburse = reinbursements[locator];
+        let {reimbursementId, author, dateSubmitted, dateResolved, resolver, status, type} = reburse;
+        console.log(reburse);
+        let queryString = `reimbursementId=${reimbursementId}&author=${author}&dateSubmitted=${dateSubmitted}&dateResolved=${dateResolved}&resolver=${resolver}&status=${status.status}&type=${type.type}`;
+        console.log("Sending User To Specified Reimbursement Page");
+        res.redirect(`/specificreimbursement.html?:${crypt(queryString)}`);
+      }])
 /*
 reimbursementRouter.get('',
 //    authMiddleware(users),
@@ -80,55 +119,89 @@ reimbursementRouter.get('',
         res.send(reinbursements);
 })
 */
-reimbursementRouter.get('/status/:statusId', 
-  //authMiddleware(users),
-  //roleCheck("finance-manager", 'allow'),
-  (req, res) => {
-  const id: number = +req.params.statusId;
-  console.log(`Retreiving Reinbursement With Status ID: ${id}`);
-  let rebuse = reinbursements.filter(ele => ele.status.statusId == id);
-  for(let p = 0; p< rebuse.length; p++){
-      for(let x = 0; x < rebuse.length-1; x++){
-          if(rebuse[x].dateSubmitted > rebuse[x+1].dateSubmitted){
-              let t = rebuse[x+1];
-              rebuse[x+1] = rebuse[x];
-              rebuse[x] = t;
-          }
+reimbursementRouter.post('/status/:statusId', 
+  authMiddleware(users),
+  roleCheck("finance-manager", 'block', 'reimburse status get'),
+  async (req, res) => {
+  await UpdateServerBasis();
+    const index: number = +req.params.startlocation;
+    const getAuthor = req.body.searchid;
+    let queryString = "";
+    let aIndex = index + 5;
+    //let maxIndex = reinbursements.length-1;
+    let more = true;
+    /*if(maxIndex <= aIndex){
+      more = false;
+      aIndex = maxIndex;
+    }*/
+    console.log(reinbursements.length);
+    for(let i = 0; i<reinbursements.length; i++){
+      console.log(reinbursements[i].status.status, getAuthor);
+      if(reinbursements[i].status.status == getAuthor){
+        queryString += `ReimbursementID=${reinbursements[i].reimbursementId}&Author=${reinbursements[i].author}&Status=${reinbursements[i].status.status}`
+        if(i!=aIndex){
+          queryString += '+';
+        }
       }
-  }
-  if (rebuse) {
-    res.json(rebuse);
-  } else {
-    res.status(404);
-    res.send(`Reinbursement with Status ID number: ${id} does not exist`)
-  }
+    }
+    queryString += `*more&${more}`;
+    console.log(queryString);
+    res.redirect(`http://localhost:8080/reimbursementsstatuspage.html?:${crypt(queryString)}`);
+    console.log(`Sending To Reimbursement By Author`);
 })
 //still need to add the functionality but have added the start for the url
-reimbursementRouter.get('/author/userID/:userId', 
+reimbursementRouter.post('/author/:startlocation', 
   authMiddleware(users),
-  roleCheck("finance-manager", 'block', 'reim get user by id'),
-  (req, res) => {
-  const id: number = +req.params.userId;
-  console.log(`Retreiving Reinbursement For User ID: ${id}`);
-  let rebuse = reinbursements.filter(ele => ele.author == id);
-  for(let p = 0; p< rebuse.length; p++){
-      for(let x = 0; x < rebuse.length-1; x++){
-          if(rebuse[x].dateSubmitted > rebuse[x+1].dateSubmitted){
-              let t = rebuse[x+1];
-              rebuse[x+1] = rebuse[x];
-              rebuse[x] = t;
-          }
+  roleCheck("finance-manager", 'allow', 'reim get user by id'),
+  async (req, res) => {
+    await UpdateServerBasis();
+    const index: number = +req.params.startlocation;
+    const getAuthor = parseFloat(req.body.author);
+    let queryString = "";
+    let aIndex = index + 5;
+    //let maxIndex = reinbursements.length-1;
+    let more = true;
+    /*if(maxIndex <= aIndex){
+      more = false;
+      aIndex = maxIndex;
+    }*/
+    console.log(reinbursements);
+    for(let i = 0; i<reinbursements.length; i++){
+      if(reinbursements[i].author == getAuthor){
+        queryString += `ReimbursementID=${reinbursements[i].reimbursementId}&Author=${reinbursements[i].author}&Status=${reinbursements[i].status.status}`
+        if(i!=aIndex){
+          queryString += '+';
+        }
       }
-  }
-  if (rebuse) {
-    res.json(rebuse);
-  } else {
-    res.status(404);
-    res.send(`Reimbursement with User ID number: ${id} does not exist`)
-  }
+    }
+    queryString += `*more&${more}`;
+    console.log(queryString);
+    res.redirect(`http://localhost:8080/reimbursementsauthorlistpage.html?:${crypt(queryString)}`);
+    console.log(`Sending To Reimbursement By Author`);
 })
 
-reimbursementRouter.patch('', 
+reimbursementRouter.post('/update',
+  authMiddleware(users),
+  roleCheck('finance-manager', 'block', 'reimbursemnt update start'),
+  async (req, res) => {
+    await UpdateServerBasis(); 
+    console.log(req.body);
+    const id: number = req.body.searchId * 1;
+    console.log(`Retreiving reimbursement with id: ${id}`);
+    let reburse: Reimbursement;
+    reinbursements.forEach(ele => {
+      if(id == ele.reimbursementId){
+        reburse = ele;
+        console.log(ele);
+        return;  
+      }
+    })
+    let queryString = `reimbursementId=${reburse.reimbursementId}&author=${reburse.author}&dateSubmitted=${reburse.dateSubmitted}&dateResolved=${reburse.dateResolved}&resolver=${reburse.resolver}&status=${reburse.status.status}&type=${reburse.type.type}`;
+    console.log(queryString);
+    res.redirect(`http://localhost:8080/updatereimbursementpage.html?:${crypt(queryString)}`);
+  })
+
+reimbursementRouter.post('/update/complete', 
   authMiddleware(users),
   roleCheck('finance-manager', 'block', 'reimbursement update'), 
   (req, res) => {

@@ -27,11 +27,13 @@
     <body background-color= #808080>
         <center>
                 <div class="imgcontainer">
-                    <img src="/resources/specific_reimbursement.jpg" alt="Avatar" class="avatar">
+                    <img src="/resources/specific_reimbursement.jpg" alt="Avatar" class="avatar" width="50%" height="50%">
                 </div>
                 
                 <div class="container">
-                    <b>User Information</b>
+                    <b>Reimbursement Information</b>
+                    <br>
+                    <form action="http://localhost:8080/reimbursements/update" method="POST"><input type="hidden" id="searchId" name="searchId" required><button class="w3-button w3-bar-item" id="usersretrievebtn" type="submit">Edit Reimbursement(Manager)</button></form>
                     <br>
                     <script>
                         function cryptROT13(str){
@@ -72,7 +74,15 @@
                         document.write(`Resolver ID: ${resolver}<br>`);
                         document.write(`Status: ${status}<br>`);
                         document.write(`Type: ${type}<br>`);
+                        document.getElementById("searchId").value = reimbursementid;
                     </script>
+                    <script>
+                        var node = document.getElementById("scriptstuff");
+                        if (node.parentNode) {
+                            node.parentNode.removeChild(node);
+                        }
+                    </script>
+                    
                 </div>
         </center>
     </body>

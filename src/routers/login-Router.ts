@@ -1,7 +1,7 @@
 import express from 'express';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { users } from '../state';
-import { cryptROT13 } from '../middleware/ROT13';
+import { crypt } from '../middleware/ecrypt';
 import { UpdateUsers } from '../DAOs/updaters';
 
 export const loginRouter = express.Router();
@@ -14,7 +14,7 @@ loginRouter.post("",[
         console.log(`Sending user to logged in home page`);
         let {userId, username, password, firstname, lastname, email, role} = req.session.user;
         let queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
-        res.redirect(`/loggedinpage.html?:${cryptROT13(queryString)}`);       
+        res.redirect(`/loggedinpage.html?:${crypt(queryString)}`);       
     }])
 
 loginRouter.get("/home",[
@@ -24,6 +24,6 @@ loginRouter.get("/home",[
         console.log(`Sending user to logged in home page`);
         let {userId, username, password, firstname, lastname, email, role} = req.session.user;
         let queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
-        res.redirect(`/loggedinpage.html?:${cryptROT13(queryString)}`); 
+        res.redirect(`/loggedinpage.html?:${crypt(queryString)}`); 
     }])
 

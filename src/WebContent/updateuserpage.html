@@ -37,8 +37,7 @@
                     <form id="userupdateform" action="http://localhost:8080/users/update/complete" method="POST">
                         <div class="container">
                             <br>
-                            <label for="uid"><b>User ID = </b></label>
-                            <a id="IuserId"></a>
+                            <label for="uid"><b>User ID = </b></label><a id="IuserId"></a>
                             <br>
                             <br>
                             <label for="uusername"><b>Username</b></label>
@@ -59,11 +58,12 @@
                             <label for="urole"><b>Role</b></label>
                             <input type="text" id="Irole" name="role" required>
                             <br>
+                            <input type="hidden" id="2userId" name="userId" required>
                             <button type="submit">Update</button>
                         </div>
                     </form>
-                    <script>
-                        function cryptROT13(str){
+                    <script id="scriptstuff">
+                        function crypt(str){
                             var input     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
                             var output    = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
                             var index     = x => input.indexOf(x);
@@ -73,8 +73,10 @@
                         urlString = (window.location.href);
                         queryParts = urlString.split('?:');
                         beforeQueryString = queryParts[1];
-                        afterQueryString = cryptROT13(beforeQueryString);
+                        afterQueryString = crypt(beforeQueryString);
                         queryString = afterQueryString.split('&');
+                        //remove crypt from DOM
+                        
                         
                         let useridA = queryString[0].split("=");
                         let usernameA = queryString[1].split("=");
@@ -95,12 +97,19 @@
                         //send these variables outside the script
                         window.onload = function(){
                             document.getElementById("IuserId").innerHTML = userid;
+                            document.getElementById("2userId").value = userid;
                             document.getElementById("Iusername").value = username;
                             document.getElementById("Ipassword").value = password;
                             document.getElementById("Ifirstname").value = firstname;
                             document.getElementById("Ilastname").value = lastname;
                             document.getElementById("Iemail").value = email;
                             document.getElementById("Irole").value = role;
+                        }
+                    </script>
+                    <script>
+                         var node = document.getElementById("scriptstuff");
+                        if (node.parentNode) {
+                        node.parentNode.removeChild(node);
                         }
                     </script>
                 </div>

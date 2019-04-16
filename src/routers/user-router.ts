@@ -4,7 +4,7 @@ import { authMiddleware } from '../middleware/auth.middleware';
 import { roleCheck } from '../middleware/roleCheckmiddleware';
 import { UploadUserUpdate } from '../DAOs/uploader';
 import { UpdateUsers } from '../DAOs/updaters';
-import { cryptROT13 } from '../middleware/ROT13';
+import { crypt } from '../middleware/ecrypt';
 import { User } from '../model/user';
 
 /**
@@ -33,30 +33,30 @@ userRouter.get('', [
     res.json(users);
   }])
 
-  userRouter.get('/list/:startlocation', [
-    authMiddleware(users),
-    roleCheck("finance-manager", 'block', 'user list'),
-    async (req, res) => {
+userRouter.get('/list/:startlocation', 
+  authMiddleware(users),
+  roleCheck("finance-manager", 'block', 'user list'),
+  async (req, res) => {
       await UpdateUsers();
       const index: number = +req.params.startlocation;
       let queryString = "";
       let aIndex = index + 5;
-      let maxIndex = users.length-1;
+      //let maxIndex = users.length-1;
       let more = true;
-      if(maxIndex <= aIndex){
+      /*if(maxIndex <= aIndex){
         more = false;
         aIndex = maxIndex;
-      }
-      for(let i = index; i<=aIndex; i++){
+      }*/
+      for(let i = 0; i<users.length; i++){
         queryString += `userID=${users[i].userId}&username=${users[i].username}&role=${users[i].role.role}`
         if(i!=aIndex){
           queryString += '+';
         }
       }
       queryString += `*more&${more}`;
-      res.redirect(`http://localhost:8080/userslistpage.html?:${cryptROT13(queryString)}`);
+      res.redirect(`http://localhost:8080/userslistpage.html?:${crypt(queryString)}`);
       console.log(`Sending To Get Users List Page Index ${index} through ${aIndex}`);
-    }])
+    })
 /**
  * find user by id
  * endpoint: /users/:id
@@ -80,7 +80,7 @@ userRouter.post('/getuser',
     let {userId, username, password, firstname, lastname, email, role} = user;
     let queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
     console.log("Sending User To Specified User Page");
-    res.redirect(`/specificuserpage.html?:${cryptROT13(queryString)}`);
+    res.redirect(`/specificuserpage.html?:${crypt(queryString)}`);
   } else {
     res.status(404);
     res.redirect("http://localhost:8080/usererrorpage.html")
@@ -103,12 +103,13 @@ userRouter.post('/update',
   async (req, res) => {
   await UpdateUsers(); 
   console.log(req.body);
-  const id: number = req.body.searchUser;
+  const id: number = req.body.searchUser * 1;
   console.log(`Retreiving user with id: ${id}`);
   let user:User;
   users.forEach(ele => {
     if(id == ele.userId){
       user = ele;
+      console.log(ele);
       return;  
     }
   })
@@ -120,7 +121,7 @@ userRouter.post('/update',
   else {
     let {userId, username, password, firstname, lastname, email, role} = user;
     let queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
-    res.redirect(`/updateuserpage.html?:${cryptROT13(queryString)}`); 
+    res.redirect(`/updateuserpage.html?:${crypt(queryString)}`); 
   } 
 })
 
@@ -161,7 +162,7 @@ userRouter.post(`/update/complete`,
         await UploadUserUpdate(user, res);
         let {userId, username, password, firstname, lastname, email, role} = user;
         let queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
-        res.redirect(`/updateuserpage.html?:${cryptROT13(queryString)}`); 
+        res.redirect(`/updateuserpage.html?:${crypt(queryString)}`); 
       }
       else{
         res.status(404);
