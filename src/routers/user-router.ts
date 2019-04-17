@@ -104,8 +104,8 @@ userRouter.post('/update',
   await UpdateUsers(); 
   console.log(req.body);
   const id: number = req.body.searchUser * 1;
-  console.log(`Retreiving user with id: ${id}`);
-  let user:User;
+  console.log(`Retreiving User with id: ${id}`);
+  let user:User;;
   users.forEach(ele => {
     if(id == ele.userId){
       user = ele;
