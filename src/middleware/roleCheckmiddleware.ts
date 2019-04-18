@@ -29,7 +29,7 @@ export function roleCheck(requiredRole:string, optionalRole = 'block', sender){
         }
         else{
             res.status(404);
-            res.redirect("http://localhost:8080/usererrorpage.html")
+            res.redirect("/usererrorpage.html")
         }
     }
     else if(requiredRole == "employee" && (req.session.user.role.role == "admin" || req.session.user.role.role == "finance-manager")){
@@ -49,5 +49,5 @@ export function roleCheck(requiredRole:string, optionalRole = 'block', sender){
 function sendUnathorized(res:any){
     console.log(`User Not Authorized To Utilize This Functionality`);
     res.status(401);
-    res.redirect(`http://localhost:8080/unauthorizedpage.html`);
+    res.redirect(`/unauthorizedpage.html`);
 }
