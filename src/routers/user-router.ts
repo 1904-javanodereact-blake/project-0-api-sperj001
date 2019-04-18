@@ -158,7 +158,8 @@ userRouter.post(`/update/complete`,
         }
       }
       if(rolePass == true){
-        req.session.user = user;
+        if(user.userId == req.session.user.userId){
+        req.session.user = user;}
         await UploadUserUpdate(user, res);
         let {userId, username, password, firstname, lastname, email, role} = user;
         let queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;

@@ -257,7 +257,7 @@ reimbursementRouter.post('/update/complete',
       selectre.reimbursementId = parseFloat(body.reimbursementId);
       selectre.author = body.author;
       selectre.amount = body.amount;
-      selectre.dateResolved = body.dateResolved;
+      selectre.dateResolved = parseFloat(body.dateResolved);
       selectre.description = body.description;
       selectre.resolver = body.resolver;
       for(let i = 0; i<RS.length; i++){
