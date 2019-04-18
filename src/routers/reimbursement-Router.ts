@@ -42,7 +42,7 @@ reimbursementRouter.get('', [
     }
     queryString += `*more&${more}`;
     console.log(queryString);
-    res.redirect(`http://localhost:8080/reimbursementsalllistpage.html?:${crypt(queryString)}`);
+    res.redirect(`/reimbursementsalllistpage.html?:${crypt(queryString)}`);
     console.log(`Sending To Reimbursement All List`);
 
   }])
@@ -50,7 +50,7 @@ reimbursementRouter.get('/create',
   authMiddleware(users),
   roleCheck("employee", 'block', 'reim create send'),
   (req, res) => {
-    res.redirect("http://localhost:8080/createreimbursementpage.html");
+    res.redirect("/createreimbursementpage.html");
     console.log('Sending User To Create Reimbursement Page');
 })
 
@@ -78,7 +78,7 @@ reimbursementRouter.post('',
           
           if(!ReimbursementType){
             res.status(404);
-            res.redirect("http://localhost:8080/usererrorpage.html")
+            res.redirect("/usererrorpage.html")
           }
           else{
             console.log(req.body.dateSubmitted);
@@ -94,7 +94,7 @@ reimbursementRouter.post('',
         }
         catch{
           res.status(404);
-          res.redirect("http://localhost:8080/usererrorpage.html")
+          res.redirect("/usererrorpage.html")
         }
 })
 reimbursementRouter.post("/specificreimbursement", [
@@ -119,7 +119,7 @@ authMiddleware(users),
         }
         catch{
           res.status(404);
-          res.redirect("http://localhost:8080/usererrorpage.html")
+          res.redirect("/usererrorpage.html")
         }
       }])
 /*
@@ -159,12 +159,12 @@ reimbursementRouter.post('/status/:statusId',
       }
       queryString += `*more&${more}`;
       console.log(queryString);
-      res.redirect(`http://localhost:8080/reimbursementsstatuspage.html?:${crypt(queryString)}`);
+      res.redirect(`/reimbursementsstatuspage.html?:${crypt(queryString)}`);
       console.log(`Sending To Reimbursement By Author`);
     }
     catch{
       res.status(404);
-      res.redirect("http://localhost:8080/usererrorpage.html")
+      res.redirect("/usererrorpage.html")
     }
 })
 //still need to add the functionality but have added the start for the url
@@ -195,12 +195,12 @@ reimbursementRouter.post('/author/:startlocation',
       }
       queryString += `*more&${more}`;
       console.log(queryString);
-      res.redirect(`http://localhost:8080/reimbursementsauthorlistpage.html?:${crypt(queryString)}`);
+      res.redirect(`/reimbursementsauthorlistpage.html?:${crypt(queryString)}`);
       console.log(`Sending To Reimbursement By Author`);
     }
     catch{
       res.status(404);
-      res.redirect("http://localhost:8080/usererrorpage.html")
+      res.redirect("/usererrorpage.html")
     }
 })
 
@@ -223,11 +223,11 @@ reimbursementRouter.post('/update',
       })
       let queryString = `reimbursementId=${reburse.reimbursementId}&author=${reburse.author}&amount=${reburse.amount}&dateSubmitted=${reburse.dateSubmitted}&dateResolved=${reburse.dateResolved}&description=${reburse.description}&status=${reburse.status.status}&type=${reburse.type.type}&resolver=${reburse.resolver}`;
       console.log(queryString);
-      res.redirect(`http://localhost:8080/updatereimbursementpage.html?:${crypt(queryString)}`);
+      res.redirect(`/updatereimbursementpage.html?:${crypt(queryString)}`);
     } 
     catch{
       res.status(404);
-      res.redirect("http://localhost:8080/usererrorpage.html")
+      res.redirect("/usererrorpage.html")
     }
   })
 
@@ -280,7 +280,7 @@ reimbursementRouter.post('/update/complete',
       }
       catch{
         res.status(404);
-        res.redirect("http://localhost:8080/usererrorpage.html")
+        res.redirect("/usererrorpage.html")
       }
     } 
 })

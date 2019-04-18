@@ -54,7 +54,7 @@ userRouter.get('/list/:startlocation',
         }
       }
       queryString += `*more&${more}`;
-      res.redirect(`http://localhost:8080/userslistpage.html?:${crypt(queryString)}`);
+      res.redirect(`/userslistpage.html?:${crypt(queryString)}`);
       console.log(`Sending To Get Users List Page Index ${index} through ${aIndex}`);
     })
 /**
@@ -83,7 +83,7 @@ userRouter.post('/getuser',
     res.redirect(`/specificuserpage.html?:${crypt(queryString)}`);
   } else {
     res.status(404);
-    res.redirect("http://localhost:8080/usererrorpage.html")
+    res.redirect("/usererrorpage.html")
   }
 })
 
@@ -116,7 +116,7 @@ userRouter.post('/update',
   console.log(user);
   if (!user) {
     res.status(404);
-    res.redirect("http://localhost:8080/usererrorpage.html");
+    res.redirect("/usererrorpage.html");
   } 
   else {
     let {userId, username, password, firstname, lastname, email, role} = user;
@@ -142,7 +142,7 @@ userRouter.post(`/update/complete`,
     })
     if (!user) {
       res.status(404);
-      res.redirect("http://localhost:8080/usererrorpage.html")
+      res.redirect("/usererrorpage.html")
     } 
     else {
       user.username = req.body.username;
@@ -167,7 +167,7 @@ userRouter.post(`/update/complete`,
       }
       else{
         res.status(404);
-        res.redirect("http://localhost:8080/usererrorpage.html");
+        res.redirect("/usererrorpage.html");
       }
     } 
   })
