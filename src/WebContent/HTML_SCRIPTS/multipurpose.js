@@ -19,6 +19,7 @@ async function callLogin(event){
         const user = await resp.json();
         localStorage.setItem('currentUser', JSON.stringify(user));  
         console.log(localStorage.getItem('currentUser'));
+        window.location = "../loggedinpage.html";
     }
     catch {
         console.log("Failed to login");

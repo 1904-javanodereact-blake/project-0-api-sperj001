@@ -8,5 +8,5 @@ export const mypool = new Pool({
     host: process.env['DB_URL'],
     database: process.env['DB_NAME'],
     password: process.env['DB_PASSWORD'],
-    max: 5
+    max: 15
 });

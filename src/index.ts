@@ -29,7 +29,6 @@ app.use(sessionMiddleware);
 /*
  * Register Routers
 */
-app.use('/test', loginRouter);
 app.use('/users', userRouter);
 app.use('/login', loginRouter);
 app.use(`/reimbursements`, reimbursementRouter);

@@ -14,9 +14,9 @@
     <head> 
         <nav class="w3-bar w3-black">
             <img class="w3-bar-item" src="/resources/revature_logo.png" alt ="Revature Logo" width="148px" height="60px"/>
-            <a><form action="/login/home" method="get"><button class="w3-button w3-bar-item" id="homebtn" type="submit">Home</button></form></a>
-            <a><form action="/users/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Users</button></form></a>
-            <a><form action="/reimbursements/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Reimbursements</button></form></a>
+            <a><button class="w3-button w3-bar-item" id="homebtn" onclick="location.href='/loggedinpage.html';">Home</button></a>
+            <a><button class="w3-button w3-bar-item" id="usersbtn"  onclick="location.href=`/usersmainpage.html`;">Users</button></a>
+            <a><button class="w3-button w3-bar-item" id="usersbtn" onclick="location.href=`/reimbursementsmainpage.html`;">Reimbursements</button></a>
         </nav>
     </head>
     <body background-color= #808080>
@@ -29,34 +29,16 @@
                     <b>Home Page</b>
                     <br>
                     <script>
-                        function cryptROT13(str){
-                            var input     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-                            var output    = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
-                            var index     = x => input.indexOf(x);
-                            var translate = x => index(x) > -1 ? output[index(x)] : x;
-                            return str.split('').map(translate).join('');
-                        }
-                        urlString = (window.location.href);
-                        queryParts = urlString.split('?:');
-                        beforeQueryString = queryParts[1];
-                        afterQueryString = cryptROT13(beforeQueryString);
-                        queryString = afterQueryString.split('&');
-                        
-                        let useridA = queryString[0].split("=");
-                        let usernameA = queryString[1].split("=");
-                        let passwordA = queryString[2].split("=");
-                        let firstnameA = queryString[3].split("=");
-                        let lastnameA = queryString[4].split("=");
-                        let emailA = queryString[5].split("=");
-                        let roleA = queryString[6].split('=');
                         //values to be read later
-                        let userid = useridA[1];
-                        let username = usernameA[1];
-                        let password = passwordA[1];
-                        let firstname = firstnameA[1];
-                        let lastname = lastnameA[1];
-                        let email = emailA[1];
-                        let role = roleA[1];
+                        let user = JSON.parse(localStorage.getItem("currentUser"));
+                        console.log(user);
+                        let userid = user.userid;
+                        let username = user.username;
+                        let password = user.passkey;
+                        let firstname = user.firstname;
+                        let lastname = user.lastname;
+                        let email = user.email;
+                        let role = user.givenrole;
                         //send these variables outside the script
                         document.write(`User ID: ${userid}<br>`);
                         document.write(`Username: ${username}<br>`);
@@ -66,12 +48,6 @@
                         document.write(`Email: ${email}<br>`);
                         document.write(`Role: ${role}<br>`);
                     </script>
-                    <script>
-                            var node = document.getElementById("scriptstuff");
-                            if (node.parentNode) {
-                            node.parentNode.removeChild(node);
-                            }
-                        </script>
                 </div>
         </center>
     </body>
