@@ -9,6 +9,7 @@ export const loginRouter = express.Router();
 loginRouter.post('', [
     authMiddleware(users),
     async (req, res) => {
+        console.log('attempting to log in');
         await UpdateUsers();
         console.log(`${req.session.user.username} has been logged-in successfully.`);
         console.log(`Sending user to logged in home page`);

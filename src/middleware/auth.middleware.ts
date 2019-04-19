@@ -4,6 +4,7 @@ import { UpdateUsers } from '../DAOs/updaters';
 // middle ware to require username and password to be sent over to validate ability of user to gain access to other features
 export function authMiddleware (users: User[]) {
   return async (req, res, next) => {
+    console.log('running auth');
     let isAuthorized = false;
     if (!req.session.loggedIn) {
       await UpdateUsers();
