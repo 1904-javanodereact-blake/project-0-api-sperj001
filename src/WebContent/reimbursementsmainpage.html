@@ -20,9 +20,9 @@
     <head> 
         <nav class="w3-bar w3-black">
             <img class="w3-bar-item" src="/resources/revature_logo.png" alt ="Revature Logo" width="148px" height="60px"/>
-            <a><form action="http://localhost:8080/login/home" method="get"><button class="w3-button w3-bar-item" id="homebtn" type="submit">Home</button></form></a>
-            <a><form action="http://localhost:8080/users/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Users</button></form></a>
-            <a><form action="http://localhost:8080/reimbursements/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Reimbursements</button></form></a> 
+            <a><form action="/login/home" method="get"><button class="w3-button w3-bar-item" id="homebtn" type="submit">Home</button></form></a>
+            <a><form action="/users/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Users</button></form></a>
+            <a><form action="/reimbursements/home" method="get"><button class="w3-button w3-bar-item" id="usersbtn" type="submit">Reimbursements</button></form></a> 
         </nav>
     </head>
     <body background-color= #808080>
@@ -34,22 +34,22 @@
                 <div class="container">
                     <b>Reimbursements Page</b>
                     <br>
-                    <form action="http://localhost:8080/reimbursements/create" method="get"><button id="reimbursecreatsendbtn" type="submit">Request A Reimbursement</button></form>
-                    <form id="logform" action="http://localhost:8080/reimbursements/author/0" method="POST">
+                    <form action="/reimbursements/create" method="get"><button id="reimbursecreatsendbtn" type="submit">Request A Reimbursement</button></form>
+                    <form id="logform" action="/reimbursements/author/0" method="POST">
                         <div class="container">
                             <label for="author"><b>View Reimbsements By Author ID. (Manager or Self Query)</b></label>
                             <input type="text" name="author" size="5pxl" required>
                             <button type="submit">Get Reimbursements</button>
                         </div>
                     </form>
-                    <form id="logform" action="http://localhost:8080/reimbursements/status/0" method="POST">
+                    <form id="logform" action="/reimbursements/status/0" method="POST">
                         <div class="container">
                             <label for="searchid"><b>View Reimbsements By Status ID (Manager)</b></label>
                             <input type="text" name="searchid" size="5pxl" required>
                             <button type="submit">Get Reimbursements</button>
                         </div>
                     </form>
-                    <form action="http://localhost:8080/reimbursements" method="get"><button class="w3-button w3-bar-item" id="usersretrievebtn" type="submit">View All Reimbursement(Manager)</button></form>
+                    <form action="/reimbursements" method="get"><button class="w3-button w3-bar-item" id="usersretrievebtn" type="submit">View All Reimbursement(Manager)</button></form>
                 </div>
         </center>
     </body>
