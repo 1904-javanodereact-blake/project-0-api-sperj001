@@ -1,10 +1,10 @@
 import { User } from '../model/user';
-import { establishDBconnection } from '../middleware/DAOmiddleware';
 import { Reimbursement } from '../model/reimbursement';
+import { mypool } from '../middleware/DAOmiddleware';
 
 export async function UploadUserUpdate(user: User, res: any) {
     // Update the database entry for the user at the specified ID with the new given user's data
-    const myclient = establishDBconnection();
+    const myclient = mypool;
     try {
         try {
             const result = await myclient.query({
@@ -28,7 +28,7 @@ export async function UploadUserUpdate(user: User, res: any) {
 
 export async function UploadNewReimbursement(reburse: Reimbursement, res: any) {
     // Update the database table to include a new reimbursement
-    const myclient = establishDBconnection();
+    const myclient = mypool;
     try {
         try {
             await myclient.query(`SET SCHEMA 'ERS';
@@ -49,7 +49,7 @@ export async function UploadNewReimbursement(reburse: Reimbursement, res: any) {
 
 export async function UploadReimbursementUpdate(reburse: Reimbursement, res: any) {
     // Update the database entry for the user at the specified ID with the new given user's data
-    const myclient = establishDBconnection();
+    const myclient = mypool;
     try {
         try {
             const result = await myclient.query({
