@@ -13,6 +13,23 @@ UpdateServerBasis();
 // -------------------------------
 const app = express();
 
+
+app.use((req, res, next) => {
+  console.log(`Method: ${req.method}, URL: ${req.url}`);
+  next();
+});
+
+app.use((req, resp, next) => {
+  console.log(req.get('host'));
+  (process.env.SHIP_API_STAGE === 'prod')
+    ? resp.header('Access-Control-Allow-Origin')
+    : resp.header('Access-Control-Allow-Origin', `${req.headers.origin}`);
+  resp.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  resp.header('Access-Control-Allow-Credentials', 'true');
+  resp.header('Access-Control-Allow-Methods', 'POST, GET, DELETE, PUT, PATCH');
+  next();
+});
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'WebContent')));

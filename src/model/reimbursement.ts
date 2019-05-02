@@ -1,17 +1,17 @@
-import { ReimbursementStatus } from "./ReimbursementStatus";
-import { ReimbursementType } from "./ReimbursementType";
+import { ReimbursementStatus } from './ReimbursementStatus';
+import { ReimbursementType } from './ReimbursementType';
 
-export class Reimbursement{
+export class Reimbursement {
     reimbursementId: number;
     author: number;
-    amount: number;  
-    dateSubmitted: number; 
+    amount: number;
+    dateSubmitted: number;
     dateResolved: number;
-    description: string; 
-    resolver: number; 
+    description: string;
+    resolver: number;
     status: ReimbursementStatus;
     type: ReimbursementType;
-    constructor(reimbursementId: number, author: number, amount: number, dateSubmitted: number, dateResolved: number, description: string, resolver: number, status: ReimbursementStatus, type: ReimbursementType){
+    constructor(reimbursementId: number, author: number, amount: number, dateSubmitted: number, dateResolved: number, description: string, resolver: number, status: ReimbursementStatus, type: ReimbursementType) {
         this.reimbursementId = reimbursementId;
         this.author = author;
         this.amount = amount;

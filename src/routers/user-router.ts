@@ -1,11 +1,10 @@
 import express from 'express';
-import { users, roles } from '../state';
+import { users } from '../state';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { roleCheck } from '../middleware/roleCheckmiddleware';
-import { UploadUserUpdate } from '../DAOs/uploader';
-import { UpdateUsers } from '../DAOs/updaters';
-import { crypt } from '../middleware/ecrypt';
 import { User } from '../model/user';
+import { mypool } from '../middleware/DAOmiddleware';
+import { role } from '../model/role';
 
 /**
  * User router will handle all requests starting with
@@ -18,156 +17,87 @@ export const userRouter = express.Router();
  * find all users
  * endpoint: /users
  */
-userRouter.get('/home', [
-  authMiddleware(users),
-  (req, res) => {
-    console.log(`Redirecting User To User Homepage`);
-    res.redirect(`/usersmainpage.html`);
-  }]);
-
 userRouter.get('', [
   authMiddleware(users),
   roleCheck('finance-manager', 'block', 'user update call'),
-  (req, res) => {
-    console.log('Retreiving All Users');
-    res.json(users);
-  }]);
-
-userRouter.get('/list/:startlocation',
-  authMiddleware(users),
-  roleCheck('finance-manager', 'block', 'user list'),
   async (req, res) => {
-      await UpdateUsers();
-      const index: number = +req.params.startlocation;
-      let queryString = '';
-      const aIndex = index + 5;
-      // let maxIndex = users.length-1;
-      const more = true;
-      /*if(maxIndex <= aIndex){
-        more = false;
-        aIndex = maxIndex;
-      }*/
-      for (let i = 0; i < users.length; i++) {
-        queryString += `userID=${users[i].userId}&username=${users[i].username}&role=${users[i].role.role}`;
-        if (i != aIndex) {
-          queryString += '+';
-        }
-      }
-      queryString += `*more&${more}`;
-      res.redirect(`/userslistpage.html?:${crypt(queryString)}`);
-      console.log(`Sending To Get Users List Page Index ${index} through ${aIndex}`);
-    });
+    console.log('Retreiving All Users');
+    const myclient = await mypool.connect();
+    try {
+      await  myclient.query(`SET SCHEMA 'ERS';`);
+        const q1 = `Select * from users Left join roles a ON users.givenrole = a.roleid;`;
+        const resp1 = await myclient.query(q1);
+        console.log(resp1.rows);
+        res.json(resp1.rows);
+        console.log('Sending List Of Users');
+    }
+    catch {
+      console.log('ERROR');
+      res.send('ERROR');
+    }
+    myclient.release();
+  }]);
 /**
  * find user by id
  * endpoint: /users/:id
  */
-userRouter.post('/getuser',
+userRouter.get('/:id',
   authMiddleware(users),
   roleCheck('finance-manager', 'allow', 'user id'),
   async (req, res) => {
-  await UpdateUsers();
-  console.log(req.body);
-  const id: number = req.body.searchUser;
-  console.log(`Retreiving user with id: ${id}`);
-  let user: User;
-  users.forEach(ele => {
-    if (id == ele.userId) {
-      user = ele;
-      return;
-    }
-  });
-  if (user) {
-    const {userId, username, password, firstname, lastname, email, role} = user;
-    const queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
-    console.log('Sending User To Specified User Page');
-    res.redirect(`/specificuserpage.html?:${crypt(queryString)}`);
-  } else {
-    res.status(404);
-    res.redirect('/usererrorpage.html');
-  }
-});
+    const id: number = +req.params.id;
+    console.log(`Retreiving user with id: ${id}`);
+    let user;
+    const myclient = await mypool.connect();
+    await  myclient.query(`SET SCHEMA 'ERS';`);
+    const query = `SELECT * FROM users Left join roles a ON users.givenrole = a.roleid WHERE userid = ${id}`;
+    console.log('getting user from server');
+    const resp = await myclient.query(query);
+    user = resp.rows[0];
+    console.log(user);
 
-/*
-userRouter.post('', (req, res) => {
-  console.log(`creating user`, req.body);
-  const user: User = req.body;
-  user.userId = Math.floor(Math.random() * 10000000);
-  users.push(user);
-  res.status(201);
-  res.send(user);
-})
-*/
-userRouter.post('/update',
+    if (user) {
+      console.log('Sending Speified User Information');
+      res.json(user);
+    } else {
+      res.status(404);
+      console.log('Unable To Speified User Information');
+      res.send('ERROR');
+    }
+    myclient.release();
+});
+/**
+ * update user by id
+ * endpoint: /users/update/:id
+ */
+userRouter.patch('/update',
   authMiddleware(users),
   roleCheck('admin', 'block', 'user update entry'),
   async (req, res) => {
-  await UpdateUsers();
-  console.log(req.body);
-  const id: number = req.body.searchUser * 1;
-  console.log(`Retreiving User with id: ${id}`);
-  let user: User;
-  users.forEach(ele => {
-    if (id == ele.userId) {
-      user = ele;
-      console.log(ele);
-      return;
-    }
-  });
-  console.log(user);
-  if (!user) {
-    res.status(404);
-    res.redirect('/usererrorpage.html');
-  }
-  else {
-    const {userId, username, password, firstname, lastname, email, role} = user;
-    const queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
-    res.redirect(`/updateuserpage.html?:${crypt(queryString)}`);
-  }
-});
-
-userRouter.post(`/update/complete`,
-  authMiddleware(users),
-  roleCheck('admin', 'block', 'user update'),
-  async(req, res) => {
-    await UpdateUsers();
     console.log(req.body);
-    const id: number = req.body.userId;
-    console.log(`Retreiving Updated User With ID: ${id}`);
-    let user: User;
-    users.forEach(ele => {
-      if (id == ele.userId) {
-        user = ele;
-        return;
-      }
-    });
+    const body = req.body;
+    let user = new User(body.userid, body.username, body.passkey, body.firstname, body.lastname, body.email, new role(0, body.givenrole));
+    const myclient = await mypool.connect();
+    await  myclient.query(`SET SCHEMA 'ERS';`);
+    // update the text of the user's role to a number
+    const q1 = `Select roleid from roles where roledesc = '${user.role.role}';`;
+    const resp1 = await myclient.query(q1);
+    user.role.roleId = resp1.rows[0].roleid;
+    // update the user entry
+    const query = `Update users
+    SET username = '${user.username}', passkey = '${user.password}', firstname = '${user.firstname}', lastname = '${user.lastname}', email = '${user.email}', givenrole = ${user.role.roleId}
+    WHERE userid = ${user.userId}`;
+    console.log(query);
+    const resp = await myclient.query(query);
+    user = resp.rows[0];
+    console.log(user);
     if (!user) {
       res.status(404);
-      res.redirect('/usererrorpage.html');
+      console.log('ERROR UPDATING USER');
+      res.send('ERROR');
     }
     else {
-      user.username = req.body.username;
-      user.firstname = req.body.firstname;
-      user.lastname = req.body.lastname;
-      user.password = req.body.password;
-      let rolePass = false;
-      user.role.role = req.body.role;
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].role == user.role.role) {
-          user.role.roleId = roles[i].roleId;
-          rolePass = true;
-        }
-      }
-      if (rolePass == true) {
-        if (user.userId == req.session.user.userId) {
-        req.session.user = user; }
-        await UploadUserUpdate(user, res);
-        const {userId, username, password, firstname, lastname, email, role} = user;
-        const queryString = `userID=${userId}&username=${username}&password=${password}&firstname=${firstname}&lastname=${lastname}&email=${email}&role=${role.role}`;
-        res.redirect(`/updateuserpage.html?:${crypt(queryString)}`);
-      }
-      else {
-        res.status(404);
-        res.redirect('/usererrorpage.html');
-      }
+      res.json(user);
     }
-  });
+    myclient.release();
+});

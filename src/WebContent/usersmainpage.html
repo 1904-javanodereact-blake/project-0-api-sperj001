@@ -8,7 +8,8 @@
             body {
                 background-color: 	#808080;
             }
-           </style>
+        </style>
+        <script src="/HTML_SCRIPTS/usersjshtml.js"></script>
 </head>
 <body>
     <head> 
@@ -29,7 +30,7 @@
                 <b>User Main Page</b>
                 <br>
                 <nav>
-                    <form action="/users/list/0" method="get"><button class="w3-button w3-bar-item" id="usersretrievebtn" type="submit">Get All Users (Manager)</button></form>
+                    <form onsubmit="callAllUsers(event)"><button class="w3-button w3-bar-item" type="submit">Get All Users (Manager)</button></form>
                     <form id="logform" action="/users/getuser" method="POST">
                         <div class="container">
                             <label for="searchid"><b>View User With ID:</b></label>

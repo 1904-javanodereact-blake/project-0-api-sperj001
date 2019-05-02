@@ -28,7 +28,7 @@
                 <div class="container">
                     <b>Reimbursements Page</b>
                     <br>
-                    <form action="/reimbursements/create" method="get"><button id="reimbursecreatsendbtn" type="submit">Request A Reimbursement</button></form>
+                    <button id="reimbursecreatsendbtn" type="submit" onclick="location.href='/createreimbursementpage.html'">Request A Reimbursement</button>
                     <form id="logform" action="/reimbursements/author/0" method="POST">
                         <div class="container">
                             <label for="author"><b>View Reimbsements By Author ID. (Manager or Self Query)</b></label>
@@ -43,7 +43,7 @@
                             <button type="submit">Get Reimbursements</button>
                         </div>
                     </form>
-                    <form action="/reimbursements" method="get"><button class="w3-button w3-bar-item" id="usersretrievebtn" type="submit">View All Reimbursement(Manager)</button></form>
+                    <button class="w3-button w3-bar-item" id="usersretrievebtn" type="submit" onclick="location.href='/reimbursementsalllistpage.html'">View All Reimbursement(Manager)</button>
                 </div>
         </center>
     </body>

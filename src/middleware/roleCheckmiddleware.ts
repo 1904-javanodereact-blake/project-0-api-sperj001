@@ -5,7 +5,7 @@ export function roleCheck(requiredRole: string, optionalRole = 'block', sender) 
     return async(req, res, next) => {
     await UpdateUsers();
     console.log(optionalRole + ' is optional role setting from ' + sender);
-    // console.log(`Checking Authorization of ${req.session.user.role.role} against ${requiredRole}`);
+    // console.log(`Checking Authorization of ${req.session.user.givenrole} against ${requiredRole}`);
     if (optionalRole != 'block') {
         console.log(`Also Checking Authorization Of Second Optional Allowed User With Setting ${optionalRole}`);
         let id: number;
@@ -17,27 +17,33 @@ export function roleCheck(requiredRole: string, optionalRole = 'block', sender) 
         }
         console.log(id + ' is the set id');
         console.log(`Testing If User ID Matches Requested ID`);
+        console.log(req.session.user);
         if (id < users.length) {
             const user = users.find(u => u.userId === id);
-            if (user.userId == req.session.user.userId || (req.session.user.role.role == 'admin' || req.session.user.role.role == 'finance-manager')) {
+            if (user.userId == req.session.user.userId || (req.session.user.givenrole == 'admin' || req.session.user.givenrole == 'finance-manager')) {
                 console.log('User Authorized for same id access');
                 next();
             }
-            else {
-                sendUnathorized(res);
-            }
         }
+        else if (requiredRole == 'employee' && (req.session.user.givenrole == 'admin' || req.session.user.givenrole == 'finance-manager')) {
+            console.log('User Authorized for great privalege access');
+            next();
+        }
+        else if (req.session.user.givenrole == requiredRole || req.session.user.givenrole == 'admin') {
+            console.log( req.session.user.givenrole + ' & ' + requiredRole);
+            console.log('User Authorized for same role access');
+            next();
+          }
         else {
-            res.status(404);
-            res.redirect('/usererrorpage.html');
+            sendUnathorized(res);
         }
     }
-    else if (requiredRole == 'employee' && (req.session.user.role.role == 'admin' || req.session.user.role.role == 'finance-manager')) {
+    else if (requiredRole == 'employee' && (req.session.user.givenrole == 'admin' || req.session.user.givenrole == 'finance-manager')) {
         console.log('User Authorized for great privalege access');
         next();
     }
-    else if (req.session.user.role.role == requiredRole || req.session.user.role.role == 'admin') {
-        console.log( req.session.user.role.role + ' & ' + requiredRole);
+    else if (req.session.user.givenrole == requiredRole || req.session.user.givenrole == 'admin') {
+        console.log( req.session.user.givenrole + ' & ' + requiredRole);
         console.log('User Authorized for same role access');
         next();
       }
@@ -49,5 +55,4 @@ export function roleCheck(requiredRole: string, optionalRole = 'block', sender) 
 function sendUnathorized(res: any) {
     console.log(`User Not Authorized To Utilize This Functionality`);
     res.status(401);
-    res.redirect(`/unauthorizedpage.html`);
 }

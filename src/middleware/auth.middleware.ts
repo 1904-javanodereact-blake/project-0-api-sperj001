@@ -13,10 +13,21 @@ export function authMiddleware (users: User[]) {
         await  myclient.query(`SET SCHEMA 'ERS';`);
         const query = `SELECT * FROM users WHERE username = $1 AND passkey = $2;`;
         const resp = await myclient.query(query, [username, password]);
-        console.log(resp.rows[0]);
+        console.log(resp.rows);
         const user = resp.rows[0];
+        const queryb = `SELECT * FROM roles`;
+        const respb = await myclient.query(queryb);
+        const roles = respb.rows;
+        console.log(roles);
+        for (let i = 0; i < roles.length; i++) {
+          console.log(user.givenrole + ' compared to ' + roles[i].roleid);
+          if (roles[i].roleid == user.givenrole) {
+            user.givenrole = roles[i].roledesc;
+          }
+        }
+        console.log('----------------');
         console.log(user);
-            if (user) {
+            if (user.username != undefined) {
               isAuthorized = true;
               req.session.user = user;
           }
@@ -34,6 +45,7 @@ export function authMiddleware (users: User[]) {
     if (isAuthorized) {
       console.log(`User Logged In Successfully`);
       req.session.loggedIn = true;
+      console.log(req.session.loggedIn);
       next();
     } else {
       res.status(400);
