@@ -1,9 +1,8 @@
 import { ReimbursementType } from '../model/ReimbursementType';
 import { ReimbursementStatus } from '../model/ReimbursementStatus';
-import { RT, roles, RS, users, reinbursements } from '../state';
+import { RT, roles, RS, users } from '../state';
 import { role } from '../model/role';
 import { User } from '../model/user';
-import { Reimbursement } from '../model/reimbursement';
 import { mypool } from '../middleware/DAOmiddleware';
 
 // need to add server function to get most recents from the database
@@ -13,7 +12,6 @@ export async function UpdateServerBasis() {
   await UpdateUsers();
   await UpdateReimbursementTypes();
   await UpdateReimbursementStatus();
-  await UpdateReimbursements();
   console.log('All Arrays Have Been Updated Based Upon Database Values');
 }
 
@@ -84,34 +82,6 @@ export async function UpdateReimbursementStatus() {
     RS.push(new ReimbursementStatus(element[0], element[1]));
   });
   // console.log(RS); //see new roles array
-}
-export async function UpdateReimbursements() {
-  // populate the Reimbursement Status Array
-  const myclient = mypool;
-  // console.log(ReimbursementStatus); //see old roles array
-  reinbursements.splice(0, reinbursements.length);
-  const result = await myclient.query({
-    rowMode: `array`,
-    text: `SET SCHEMA 'ERS'; SELECT * FROM reimbursements`
-  });
-  const holdR = result[1].rows;
-  for (let i = 0; i < holdR.length; i++) {
-    for (let x = 0; x < RS.length; x++) {
-      if (holdR[i][7] == RS[x].statusId) {
-        holdR[i][7] = RS[x];
-      }
-    }
-    for (let x = 0; x < RT.length; x++) {
-      if (holdR[i][8] == RT[x].typeId) {
-        holdR[i][8] = RT[x];
-      }
-    }
-  }
-  holdR.forEach(element => {
-    reinbursements.push(new Reimbursement(element[0], element[1], element[2], element[3], element[4], element[5], element[6], element[7], element[8]));
-  });
-  // console.log(reinbursements); //see new roles array
-  // console.log('updated reimbursements');
 }
 
 export async function UpdateUsers() {

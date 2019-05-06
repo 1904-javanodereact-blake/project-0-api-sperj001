@@ -14,6 +14,7 @@ export function authMiddleware (users: User[]) {
         const query = `SELECT * FROM users WHERE username = $1 AND passkey = $2;`;
         const resp = await myclient.query(query, [username, password]);
         console.log(resp.rows);
+        console.log('"That was the user with the img"');
         const user = resp.rows[0];
         const queryb = `SELECT * FROM roles`;
         const respb = await myclient.query(queryb);

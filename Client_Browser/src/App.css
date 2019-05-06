@@ -1,0 +1,135 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+.App-title { 
+  color: white;
+  font-size: 5em;
+}
+.App-subtitle { 
+  color: white;
+  font-size: 3em;
+}
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.Centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+body {
+  background-image: url('https://images.alphacoders.com/226/226091.jpg');
+  background-attachment: fixed;
+ }
+.Login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url("http://atgbcentral.com/data/out/71/4541111-game-of-thrones-season-5-wallpaper.jpg") ;
+  width: 20em;
+  height: 13em;
+  margin-left: 42%;
+  margin-top: 15%;
+}
+
+/*****************************
+  NAV
+*****************************/
+.rev-logo {
+  width: auto;
+  height: 2em;
+  margin-right: 2em;
+  background-color: white;
+}
+
+.margin-nav {
+  margin-right: 2em
+}
+
+
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
+  color: rgba(0,0,0,.7);
+}
+
+.navbar-expand-md .navbar-nav .nav-link {
+  padding-right: .75rem !important;
+  padding-left: .75rem !important;
+}
+
+.bg-light {
+  background-color: #ffffff !important;
+}
+
+nav {
+  border-bottom: 1px solid #000000 !important;
+  margin-bottom: 20px;
+  -webkit-box-shadow: 1px -12px 28px -1px rgba(0, 0, 0, 0.87);
+  -moz-box-shadow: 1px -12px 28px -1px rgba(0, 0, 0, 0.87);
+  box-shadow: 1px -12px 28px -1px rgba(0, 0, 0, 0.87);
+  background-image: url("http://i.imgur.com/hhxMhkG.jpg");
+  background-size: 30em 3em;
+}
+.nav-item {
+  background-image: url("http://atgbcentral.com/data/out/71/4541111-game-of-thrones-season-5-wallpaper.jpg");
+}
+.dropdown-item {
+  background-image: url("http://atgbcentral.com/data/out/71/4541111-game-of-thrones-season-5-wallpaper.jpg");
+}
+.dropdown-menu {
+  background-image: url("http://atgbcentral.com/data/out/71/4541111-game-of-thrones-season-5-wallpaper.jpg");
+}
+.card {
+  background-image: url("http://atgbcentral.com/data/out/71/4541111-game-of-thrones-season-5-wallpaper.jpg");
+  margin-left: 10%;
+  margin-right: 5%;
+  margin-bottom: 5%;
+}
+.list-group-item {
+  background-image: url("https://cdns.directv.com/content/dam/dtv/directv_marketing/offer/2019_spring_offer/marquees/hdr_0401_Game_of_Thrones.jpg");
+  background-size: 100% 150%;
+  height: 3em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: white;
+  text-align: left;
+}
+.list-group-item2 {
+  background-image: url("https://cdns.directv.com/content/dam/dtv/directv_marketing/offer/2019_spring_offer/marquees/hdr_0401_Game_of_Thrones.jpg");
+  background-size: 100% 150%;
+  height: 3.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: white;
+  text-align: left;
+}
+#examples-dropdown {
+  cursor: pointer;
+}

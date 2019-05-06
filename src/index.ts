@@ -4,13 +4,8 @@ import { userRouter } from './routers/user-router';
 import { sessionMiddleware } from './middleware/session.middleware';
 import { loginRouter } from './routers/login-Router';
 import { reimbursementRouter } from './routers/reimbursement-Router';
-import { UpdateServerBasis } from './DAOs/updaters';
 import path from 'path';
 
-// ------------------------------
-// Populate the server's arrays based upon database values
-UpdateServerBasis();
-// -------------------------------
 const app = express();
 
 

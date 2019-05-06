@@ -1,6 +1,5 @@
 import { User } from './model/user';
 import { role } from './model/role';
-import { Reimbursement } from './model/reimbursement';
 import { ReimbursementStatus } from './model/ReimbursementStatus';
 import { ReimbursementType } from './model/ReimbursementType';
 
@@ -27,9 +26,4 @@ export let RT: ReimbursementType[] = [
   new ReimbursementType(1, 'Meeting'),
   new ReimbursementType(2, 'Other')
 ];
-export let reinbursements: Reimbursement[] = [
-  new Reimbursement(1, 1, 100, new Date('2012.08.10').getTime() / 1000, 4 / 9 / 2017, 'Travel Expendature', 1, RS[0], RT[2]),
-  new Reimbursement(2, 2, 200, new Date('2012.07.10').getTime() / 1000, new Date('2013.08.10').getTime() / 1000, 'Lawsuit filed', 1, RS[1], RT[1]),
-  // tslint:disable-next-line:no-null-keyword
-  new Reimbursement(3, 3, 300, new Date('2018.08.10').getTime() / 1000, null, "Pay me, I'm bored", 1, RS[2], RT[0]),
-];
+

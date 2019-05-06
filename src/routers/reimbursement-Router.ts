@@ -29,7 +29,7 @@ reimbursementRouter.post('/create',
         const tid = resp2.rows[0].typeid;
         const setStat = new ReimbursementStatus(0, 'Pending');
         const setType = new ReimbursementType(parseFloat(tid), req.body.type);
-        const subReb = new Reimbursement((parseFloat(id) + 1), req.session.user.userid, parseFloat(req.body.amount), new Date().getTime(), undefined, req.body.description, undefined, setStat, setType);
+        const subReb = new Reimbursement((parseFloat(id) + 1), req.session.user.userid, parseFloat(req.body.amount), new Date().getTime(), undefined, req.body.description, undefined, setStat, setType, req.body.img);
         console.log(subReb);
         const query = `INSERT INTO reimbursements(reimbursementid, author, amount, datesubmitted, description, statusid, typeid)
         VALUES (${subReb.reimbursementId},${subReb.author},${subReb.amount},${subReb.dateSubmitted},'${subReb.description}', ${subReb.status.statusId},${subReb.type.typeId});`;
@@ -55,7 +55,7 @@ authMiddleware(users),
       try {
         const getID = +req.params.id * 1;
         await  myclient.query(`SET SCHEMA 'ERS';`);
-        const query = `Select reimbursements.reimbursementid, a.firstname as  authorfirst, a.lastname as authorlast, reimbursements.amount, reimbursements.datesubmitted, reimbursements.dateresolved, reimbursements.description, rt.type, rs.status, b.firstname as resolverfirst, b.lastname as resolverlast
+        const query = `Select reimbursements.reimbursementid, a.firstname as  authorfirst, a.lastname as authorlast, reimbursements.amount, reimbursements.datesubmitted, reimbursements.dateresolved, reimbursements.description, rt.type, rs.status, b.firstname as resolverfirst, b.lastname as resolverlast, rt.img as img
         From reimbursements
         Left join users a
         ON reimbursements.author = a.userid
@@ -89,7 +89,7 @@ reimbursementRouter.get('/status/:status',
         const getStatus = req.params.status;
         console.log(getStatus + 'Status' + req.params.id + 'param');
         await  myclient.query(`SET SCHEMA 'ERS';`);
-        const query = `Select reimbursements.reimbursementid, a.firstname as  authorfirst, a.lastname as authorlast, reimbursements.amount, reimbursements.datesubmitted, reimbursements.dateresolved, reimbursements.description, rt.type, rs.status, b.firstname as resolverfirst, b.lastname as resolverlast
+        const query = `Select reimbursements.reimbursementid, a.firstname as  authorfirst, a.lastname as authorlast, reimbursements.amount, reimbursements.datesubmitted, reimbursements.dateresolved, reimbursements.description, rt.type, rs.status, b.firstname as resolverfirst, b.lastname as resolverlast, rt.img as img
         From reimbursements
         Left join users a
         ON reimbursements.author = a.userid
@@ -125,7 +125,7 @@ reimbursementRouter.get('/author/:id',
       await  myclient.query(`SET SCHEMA 'ERS';`);
       let query;
       if (isNaN(+getAuthor)) {
-      query = `Select reimbursements.reimbursementid, a.firstname as  authorfirst, a.lastname as authorlast, reimbursements.amount, reimbursements.datesubmitted, reimbursements.dateresolved, reimbursements.description, rt.type, rs.status, b.firstname as resolverfirst, b.lastname as resolverlast
+      query = `Select reimbursements.reimbursementid, a.firstname as  authorfirst, a.lastname as authorlast, reimbursements.amount, reimbursements.datesubmitted, reimbursements.dateresolved, reimbursements.description, rt.type, rs.status, b.firstname as resolverfirst, b.lastname as resolverlast, rt.img as img
       From reimbursements
       Left join users a
       ON reimbursements.author = a.userid
@@ -138,7 +138,7 @@ reimbursementRouter.get('/author/:id',
       where concat(a.firstname, ' ', a.lastname) = '${getAuthor}';`;
       }
       else {
-        query = `Select reimbursements.reimbursementid, a.firstname as  authorfirst, a.lastname as authorlast, reimbursements.amount, reimbursements.datesubmitted, reimbursements.dateresolved, reimbursements.description, rt.type, rs.status, b.firstname as resolverfirst, b.lastname as resolverlast
+        query = `Select reimbursements.reimbursementid, a.firstname as  authorfirst, a.lastname as authorlast, reimbursements.amount, reimbursements.datesubmitted, reimbursements.dateresolved, reimbursements.description, rt.type, rs.status, b.firstname as resolverfirst, b.lastname as resolverlast, rt.img as img
         From reimbursements
         Left join users a
         ON reimbursements.author = a.userid
@@ -173,7 +173,7 @@ reimbursementRouter.patch('/update',
     // tslint:disable-next-line:prefer-const;
     if (body) {
       // tslint:disable-next-line:prefer-const
-      let selectre = new Reimbursement(body.reimbursementId, body.author, parseFloat(body.amount), body.dateSubmitted, (new Date().getTime()), body.description, req.session.user.userId, new ReimbursementStatus(0, body.status), new ReimbursementType(0, body.type));
+      let selectre = new Reimbursement(body.reimbursementId, body.author, parseFloat(body.amount), body.dateSubmitted, (new Date().getTime()), body.description, req.session.user.userId, new ReimbursementStatus(0, body.status), new ReimbursementType(0, body.type), body.img);
       // need to get author, status, and type into ID's
       const myclient = await mypool.connect();
       selectre.resolver = req.session.user.userid;
@@ -230,9 +230,3 @@ reimbursementRouter.patch('/update',
       res.status(404);
     }
 });
-/*
-`SET SCHEMA 'ERS';
-                UPDATE riembursements
-                SET reimbursementid = ${reburse.reimbursementId}, author = ${reburse.author}, amount = ${reburse.amount}, datesubmitted = ${reburse.amount}, dateresolved = ${reburse.dateResolved}, description = '${reburse.description}', resolver = ${reburse.resolver}, statusid = ${reburse.status.statusId}, typeid = ${reburse.type.typeId}
-                WHERE userid = ${reburse.reimbursementId};`
-*/
